@@ -1,5 +1,5 @@
 import React from "react";
-import "../styles/AdminPanel.css";
+// import "../styles/AdminPanel.css";
 
 export default function AddProduct() {
   return (
