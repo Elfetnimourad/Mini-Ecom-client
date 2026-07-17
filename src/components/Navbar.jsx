@@ -17,6 +17,7 @@ import NotificationsIcon from '@mui/icons-material/Notifications';
 import MoreIcon from '@mui/icons-material/MoreVert';
 import HomeIcon from '@mui/icons-material/Home';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import { useNavigate } from 'react-router-dom';
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
   borderRadius: theme.shape.borderRadius,
@@ -58,6 +59,8 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 export default function Navbar() {
+        let navigate = useNavigate();
+  
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
 
@@ -193,7 +196,7 @@ export default function Navbar() {
           <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
             <IconButton size="large" aria-label="show 4 new mails" color="inherit">
               <Badge badgeContent={4} color="error">
-                <HomeIcon />
+                <HomeIcon onClick={()=>navigate('/')}/>
               </Badge>
             </IconButton>
             <IconButton
@@ -202,7 +205,7 @@ export default function Navbar() {
               color="inherit"
             >
               <Badge badgeContent={17} color="error">
-                <ShoppingCartIcon />
+                <ShoppingCartIcon onClick={()=>navigate('/cart')}/>
               </Badge>
             </IconButton>
             <IconButton

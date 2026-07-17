@@ -27,7 +27,8 @@ function App() {
     <BrowserRouter>
       <Routes>
 
-        {/* ================= USER ================= */}
+        {/* ================= USER ================= 
+        */}
         <Route element={<UserLayout />}>
           <Route path="/" element={<Home />} />
           <Route path="/product/:id" element={<ProductDetails />} />
