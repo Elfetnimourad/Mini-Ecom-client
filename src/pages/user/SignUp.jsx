@@ -1,6 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 
 export default function SignUp() {
+  const [profilePic, setProfilePic] = useState(null);
+console.log("profile",profilePic)
   return (
     <div
       className="d-flex justify-content-center align-items-center"
@@ -46,7 +48,23 @@ export default function SignUp() {
               placeholder="John Doe"
             />
           </div>
+{/* Profile Picture */}
+<div className="mb-3">
+  <label className="form-label fw-semibold">
+    Profile Picture
+  </label>
 
+  <input
+    type="file"
+    className="form-control form-control-lg"
+    accept="image/*"
+    onChange={(e)=>setProfilePic(e.target.files[0])}
+  />
+
+  <small className="text-muted">
+    Upload your profile picture (JPG, PNG, WEBP).
+  </small>
+</div>
           {/* Email */}
           <div className="mb-3">
             <label className="form-label fw-semibold">
@@ -109,6 +127,7 @@ export default function SignUp() {
           <button
             className="btn btn-primary w-100 py-3 fw-bold rounded-3"
             type="button"
+            
           >
             Create Account
           </button>

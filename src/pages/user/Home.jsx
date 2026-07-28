@@ -15,6 +15,8 @@ import { useCart } from '../../context/Context';
 export default function Home(){
   const {addCart,handleAddToCart} = useCart();
       const [anchorEl, setAnchorEl] = useState(null);
+      const [searchProduct, setSearchProduct] = useState([...itemData]);
+
       let navigate = useNavigate();
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -23,44 +25,24 @@ export default function Home(){
   const handleClose = () => {
     setAnchorEl(null);
   };
-  // const [addCart,setAddCart] = useState([]);
-  // let [quantityItem,setQuantityItem] = useState(1)
-  // const { id } = useParams();
-//  const handleAddToCart = (item) => {
-//   console.log("HHHH")
-//   const product = addCart.find((p) => p.id === item.id);
+  const searchProductHandler = (e)=>{
+    const value = e.target.value;
 
-//   if (product) {
-//     setAddCart((prevCart) =>
-//       prevCart.map((p) =>
-//         p.id === item.id
-//           ? {
-//               ...p,
-//               quantity: p.quantity + 1,
-//               total: (p.quantity + 1) * p.productPrice,
-//             }
-//           : p
-//       )
-//     );
-//   } else {
-//     const addedProduct = {
-//       id: item.id,
-//       productImg: item.img,
-//       productTitle: item.title,
-//       productPrice: item.price,
-//       quantity: 1,
-//       total: item.price,
-//     };
+  if (value.trim() === "") {
+    setSearchProduct(itemData); // Show all products
+    return;
+  }
 
-//     setAddCart((prevCart) => [...prevCart, addedProduct]);
-//   }
-//   console.log("addCart",addCart)
-// };
-  
+  const filtered = itemData.filter((p) =>
+    p.title.toLowerCase().includes(value.toLowerCase())
+  );
+
+  setSearchProduct(filtered);
+  }
 return (
     <Box sx={{display:"flex",flexDirection:"column"}}>
         <Box sx={{display:"flex",flexDirection:"row",justifyContent:"space-between"}}>
-<input type="text" placeholder='Search ...' className='d-flex m-3 w-50 rounded border-primary'/>
+<input type="text" placeholder='Search ...' className='d-flex m-3 w-50 rounded border-primary' onChange={searchProductHandler}/>
   <div>
       <Button
         id="demo-positioned-button"
@@ -108,7 +90,7 @@ return (
   cols={3}
   gap={24}
 >
-  {itemData.map((item) => (
+  {searchProduct.map((item) => (
     <ImageListItem
       key={item.img}
       sx={{
