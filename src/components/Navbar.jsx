@@ -105,14 +105,15 @@ export default function Navbar() {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-      <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+      <MenuItem onClick={()=>navigate("/profile")}>Profile</MenuItem>
+      <MenuItem onClick={()=>navigate("/login")}>My account</MenuItem>
     </Menu>
   );
 
   const mobileMenuId = 'primary-search-account-menu-mobile';
   const renderMobileMenu = (
     <Menu
+    sx={{zIndex:999999999}}
       anchorEl={mobileMoreAnchorEl}
       anchorOrigin={{
         vertical: 'top',
@@ -128,24 +129,25 @@ export default function Navbar() {
       onClose={handleMobileMenuClose}
     >
       <MenuItem>
-        <IconButton size="large" aria-label="show 4 new mails" color="inherit">
+        <IconButton size="large" aria-label="show 4 new mails" color="inherit" onClick={()=>navigate("/")}>
           <Badge badgeContent={4} color="error">
-            <MailIcon />
+            <HomeIcon />
           </Badge>
         </IconButton>
-        <p>Messages</p>
+        <p>Home</p>
       </MenuItem>
       <MenuItem>
         <IconButton
           size="large"
           aria-label="show 17 new notifications"
           color="inherit"
+          onClick={()=>navigate("/Cart")}
         >
           <Badge badgeContent={17} color="error">
-            <NotificationsIcon />
+            <ShoppingCartIcon />
           </Badge>
         </IconButton>
-        <p>Notifications</p>
+        <p>Cart Shopping</p>
       </MenuItem>
       <MenuItem onClick={handleProfileMenuOpen}>
         <IconButton
@@ -220,7 +222,7 @@ export default function Navbar() {
               <AccountCircle />
             </IconButton>
           </Box>
-          <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
+          <Box sx={{ display: { xs: 'flex', md: 'none'},zIndex:9999999999999}}>
             <IconButton
               size="large"
               aria-label="show more"

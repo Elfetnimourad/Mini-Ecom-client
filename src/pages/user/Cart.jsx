@@ -1,6 +1,40 @@
 import React from "react";
+import { useCart } from "../../context/Context";
+import { useNavigate } from "react-router-dom";
 
 export default function Cart() {
+  const {addCart,setAddCart} = useCart();
+  const navigate = useNavigate();
+  const decrementQuantity = (item)=>{
+setAddCart((prevCart)=>{
+const updCart = addCart.map(p=>
+  p.id === item.id
+  ? {
+    ...p,
+    quantity:p.quantity - 1,
+    total:(p.quantity - 1) * p.productPrice,
+  }
+  : p
+)
+return updCart;
+})
+console.log("updateCart",addCart)
+  }
+  const incrementQuantity = (item)=>{
+    setAddCart((prevCart)=>{
+      const incCart = prevCart.map(p=>
+        p.id === item.id
+        ?{
+          ...p,
+          quantity:p.quantity +1,
+          total:(p.quantity + 1) * p.productPrice,
+        }:p
+      )
+      return incCart
+    })
+
+  }
+  console.log("addCart",addCart)
   return (
     <div
       className="d-flex justify-content-center align-items-center"
@@ -11,7 +45,7 @@ export default function Cart() {
     >
       <div
         className="bg-white rounded-4 shadow-lg p-4"
-        style={{ width: "80%", height: "85vh" }}
+        style={{ width: "80%", height: "110vh" }}
       >
         {/* Header */}
         <div className="d-flex justify-content-between align-items-center mb-4">
@@ -23,7 +57,7 @@ export default function Cart() {
           </div>
 
           <span className="badge bg-primary fs-6 px-3 py-2 rounded-pill">
-            1 Item
+            {addCart?.reduce((total, p) => total + (p.quantity || 0), 0)} Item
           </span>
         </div>
 
@@ -43,34 +77,38 @@ export default function Cart() {
           className="overflow-auto mt-3"
           style={{ maxHeight: "50vh" }}
         >
+          {addCart.map(product=>
           <div className="row align-items-center py-4 border-bottom">
             <div className="col-3">
               <img
-                src="https://via.placeholder.com/80"
+                src={product.productImg}
                 alt="Product"
                 className="img-fluid rounded shadow-sm"
               />
             </div>
 
             <div className="col-3 text-center">
-              <button className="btn btn-outline-secondary btn-sm">
+              <button className="btn btn-outline-secondary btn-sm" onClick={()=>decrementQuantity(product)}>
                 -
               </button>
 
-              <span className="mx-3 fw-bold">1</span>
+              <span className="mx-3 fw-bold">{product.quantity}</span>
 
-              <button className="btn btn-primary btn-sm">+</button>
+              <button className="btn btn-primary btn-sm" onClick={()=>incrementQuantity(product)}>+</button>
             </div>
 
             <div className="col-3 text-center fw-semibold">
-              $250
+              ${product.productPrice}
+      
             </div>
 
             <div className="col-3 text-end fw-bold text-primary">
-              $250
+              ${product.total}
             </div>
           </div>
-        </div>
+        
+         )}
+         </div>
 
         {/* Footer */}
         <div
@@ -84,16 +122,18 @@ export default function Cart() {
             </small>
           </div>
 
-          <h2 className="text-primary fw-bold mb-0">$250.00</h2>
+      <h2 className="text-primary fw-bold mb-0">
+        ${addCart?.reduce((total, p) => total + (p.total || 0), 0)} 
+        </h2>
         </div>
 
         {/* Buttons */}
         <div className="d-flex justify-content-end mt-4">
-          <button className="btn btn-outline-secondary me-3 px-4">
+          <button className="btn btn-outline-secondary me-3 px-4" onClick={()=>navigate("/")}>
             Continue Shopping
           </button>
 
-          <button className="btn btn-primary px-5">
+          <button className="btn btn-primary px-5" onClick={()=>navigate("/checkout")}>
             Checkout
           </button>
         </div>
