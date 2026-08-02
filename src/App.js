@@ -24,6 +24,9 @@ import EditProduct from "./pages/admin/EditProduct";
 import SignUp from './pages/user/SignUp';
 import ProfileCard from './components/Profile';
 import { ShoppContextProvider } from './context/Context';
+import TermsConditions from './pages/user/TermsConditions';
+import ResetPassword from './pages/user/ResetPassword';
+import ForgotPassword from './pages/user/ForgotPassword';
 
 function App() {
   return (
@@ -41,6 +44,13 @@ function App() {
           <Route path="/register" element={<SignUp />} />
           <Route path="/profile" element={<ProfileCard />} />
           <Route path="/checkout" element={<Checkout />} />
+          <Route path="/terms" element={<TermsConditions />} />
+          <Route
+  path="/reset-password/:token"
+  element={<ResetPassword />}
+/>
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+
 
         </Route>
 

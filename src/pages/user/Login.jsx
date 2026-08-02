@@ -1,6 +1,49 @@
-import React from "react";
+
+import React,{ useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function Login() {
+    const [email,setEmail] = useState("");
+    const[password,setPassword] = useState("");
+    const [remeberMe,setRemeberMe] = useState(false)
+const navigate = useNavigate()
+    //login
+    const login = async(e)=>{
+      e.preventDefault();
+      try{
+        const response = await fetch("http://localhost:7000/users/login",{
+          method:"POST",
+          headers:{
+            "Content-Type":"application/json",
+          },
+          body:JSON.stringify({
+            email,
+            password
+          })
+
+        })
+
+        const data = await response.json();
+                console.log(data)
+
+        if(response.ok){
+          alert(`Login successful. Happy shopping ${data.user.username}! 🛍️`);
+          navigate('/')
+           if(remeberMe){
+            localStorage.setItem("token",data.user.token)
+          }else{
+            sessionStorage.setItem("token",data.user.token)
+          }
+        }else{
+          alert(data)
+        }
+      }catch(error){
+        
+        alert(error.message)
+          
+        console.error(error)
+      }
+    }
   return (
     <div
       className="d-flex justify-content-center align-items-center"
@@ -44,6 +87,8 @@ export default function Login() {
               type="email"
               className="form-control form-control-lg"
               placeholder="Enter your email"
+              value={email}
+              onChange={(e)=>setEmail(e.target.value)}
             />
           </div>
 
@@ -57,6 +102,8 @@ export default function Login() {
               type="password"
               className="form-control form-control-lg"
               placeholder="Enter your password"
+               value={password}
+              onChange={(e)=>setPassword(e.target.value)}
             />
           </div>
 
@@ -66,6 +113,8 @@ export default function Login() {
               <input
                 className="form-check-input"
                 type="checkbox"
+                checked={remeberMe}
+                onClick={(e)=>setRemeberMe(e.target.value)}
               />
 
               <label className="form-check-label">
@@ -74,7 +123,7 @@ export default function Login() {
             </div>
 
             <a
-              href="/"
+              href="/forgot-password"
               className="text-decoration-none fw-semibold"
             >
               Forgot Password?
@@ -85,21 +134,9 @@ export default function Login() {
           <button
             className="btn btn-primary w-100 py-3 fw-bold rounded-3"
             type="button"
+            onClick={login}
           >
             Sign In
-          </button>
-
-          {/* Divider */}
-          <div className="text-center text-muted my-4">
-            ────── OR ──────
-          </div>
-
-          {/* Google */}
-          <button
-            className="btn btn-outline-dark w-100 py-3 rounded-3 fw-semibold"
-            type="button"
-          >
-            Continue with Google
           </button>
 
           {/* Register */}

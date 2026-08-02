@@ -2,6 +2,7 @@ import * as React from 'react';
 import { styled, alpha } from '@mui/material/styles';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
+import Avatar from '@mui/material/Avatar';
 import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
@@ -17,7 +18,10 @@ import NotificationsIcon from '@mui/icons-material/Notifications';
 import MoreIcon from '@mui/icons-material/MoreVert';
 import HomeIcon from '@mui/icons-material/Home';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import StorefrontIcon from "@mui/icons-material/Storefront";
+
 import { useNavigate } from 'react-router-dom';
+import { useCart } from '../context/Context';
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
   borderRadius: theme.shape.borderRadius,
@@ -63,7 +67,7 @@ export default function Navbar() {
   
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
-
+const {userData} = useCart();
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
@@ -83,18 +87,43 @@ export default function Navbar() {
   const handleMobileMenuOpen = (event) => {
     setMobileMoreAnchorEl(event.currentTarget);
   };
+  const profileHandler = ()=>{
+        setAnchorEl(null);
 
+navigate("/profile")
+  }
+  const accountHandler = ()=>{
+        setAnchorEl(null);
+
+    navigate("/login")
+  }
+  const HomeHandler = ()=>{
+        setAnchorEl(null);
+
+    navigate("/")
+  }
+  const cartHandler = ()=>{
+        setAnchorEl(null);
+
+    navigate("/Cart")
+  }
+const logoutHandler = ()=>{
+  localStorage.removeItem("token");
+  sessionStorage.removeItem("token");
+
+  navigate("/login")
+}
   const menuId = 'primary-search-account-menu';
   const renderMenu = (
     <Menu
       anchorEl={anchorEl}
       anchorOrigin={{
-        vertical: 'top',
+        vertical: 'bottom',
         horizontal: 'right',
       }}
       sx={{
         position:"absolute",
-        zIndex:4444
+        zIndex:99999999999
       }}
       id={menuId}
       keepMounted
@@ -105,8 +134,10 @@ export default function Navbar() {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={()=>navigate("/profile")}>Profile</MenuItem>
-      <MenuItem onClick={()=>navigate("/login")}>My account</MenuItem>
+      <MenuItem onClick={profileHandler}>Profile</MenuItem>
+      <MenuItem onClick={accountHandler}>My account</MenuItem>
+      <MenuItem onClick={logoutHandler}>Logout</MenuItem>
+
     </Menu>
   );
 
@@ -129,7 +160,7 @@ export default function Navbar() {
       onClose={handleMobileMenuClose}
     >
       <MenuItem>
-        <IconButton size="large" aria-label="show 4 new mails" color="inherit" onClick={()=>navigate("/")}>
+        <IconButton size="large" aria-label="show 4 new mails" color="inherit" onClick={HomeHandler}>
           <Badge badgeContent={4} color="error">
             <HomeIcon />
           </Badge>
@@ -141,7 +172,7 @@ export default function Navbar() {
           size="large"
           aria-label="show 17 new notifications"
           color="inherit"
-          onClick={()=>navigate("/Cart")}
+          onClick={cartHandler}
         >
           <Badge badgeContent={17} color="error">
             <ShoppingCartIcon />
@@ -168,32 +199,55 @@ export default function Navbar() {
     <Box sx={{ flexGrow: 1,position:"absolute",zIndex:"4444",width:"100%" }}>
       <AppBar position="static">
         <Toolbar>
-          <IconButton
-            size="large"
-            edge="start"
-            color="inherit"
-            aria-label="open drawer"
-            sx={{ mr: 2 }}
-          >
-            <MenuIcon />
-          </IconButton>
-          <Typography
-            variant="h6"
-            noWrap
-            component="div"
-            sx={{ display: { xs: 'none', sm: 'block' } }}
-          >
-            ECOM
-          </Typography>
-          <Search>
-            <SearchIconWrapper>
-              <SearchIcon />
-            </SearchIconWrapper>
-            <StyledInputBase
-              placeholder="Search…"
-              inputProps={{ 'aria-label': 'search' }}
-            />
-          </Search>
+          <Box
+  sx={{
+    display: "flex",
+    alignItems: "center",
+    gap: 2,
+    cursor: "pointer",
+    transition: ".3s",
+    "&:hover": {
+      transform: "scale(1.03)",
+    },
+  }}
+>
+ 
+
+<Avatar
+  sx={{
+    width: 60,
+    height: 60,
+    background: "linear-gradient(135deg,#7C3AED,#A855F7,#EC4899)",
+    boxShadow: "0 10px 25px rgba(124,58,237,.35)",
+    border: "3px solid rgba(255,255,255,.2)",
+  }}
+>
+  <StorefrontIcon sx={{ fontSize: 34, color: "#fff" }} />
+</Avatar>
+
+  <Box>
+    <Typography
+      sx={{
+        fontWeight: 800,
+        fontSize: "1.6rem",
+        letterSpacing: 3,
+        lineHeight: 1,
+      }}
+    >
+      ECOM
+    </Typography>
+
+    <Typography
+      sx={{
+        fontSize: ".78rem",
+        color: "rgba(255,255,255,.85)",
+        letterSpacing: 1,
+      }}
+    >
+      Dream • Shop • Enjoy
+    </Typography>
+  </Box>
+</Box>
           <Box sx={{ flexGrow: 1 }} />
           <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
             <IconButton size="large" aria-label="show 4 new mails" color="inherit">
@@ -219,7 +273,11 @@ export default function Navbar() {
               onClick={handleProfileMenuOpen}
               color="inherit"
             >
-              <AccountCircle />
+              <Avatar src={userData?.avatar} sx={{
+              width: 40,
+              height: 40,
+              border: "1px solid white",
+            }}/>
             </IconButton>
           </Box>
           <Box sx={{ display: { xs: 'flex', md: 'none'},zIndex:9999999999999}}>

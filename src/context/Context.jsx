@@ -1,9 +1,38 @@
-import { createContext, useState, useContext } from "react";
+import { createContext, useState, useContext,useEffect } from "react";
+
 
 const shoppContext = createContext(null);
 
 export const ShoppContextProvider = ({ children }) => {
   const [addCart, setAddCart] = useState([]);
+    const[userData,setUserData] = useState()
+    
+  
+  useEffect(() => {
+    const getMe = async () => {
+      try {
+        const token =
+          sessionStorage.getItem("token")||
+          localStorage.getItem("token") ;
+  console.log("token",token)
+        if (!token) return;
+  console.log("token",token)
+        const res = await fetch(
+    `http://localhost:7000/users/getMe?token=${encodeURIComponent(token)}`
+  );
+  
+  
+        const data = await res.json();
+  
+        setUserData(data);
+        console.log(userData);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+  
+    getMe();
+  }, []);
 
   const handleAddToCart = (item) => {
     console.log("HHHH");
@@ -45,7 +74,7 @@ setAddCart((prevCart) => {
   };
 
   return (
-    <shoppContext.Provider value={{ addCart, setAddCart,handleAddToCart }}>
+    <shoppContext.Provider value={{ addCart, setAddCart,userData,handleAddToCart }}>
       {children}
     </shoppContext.Provider>
   );

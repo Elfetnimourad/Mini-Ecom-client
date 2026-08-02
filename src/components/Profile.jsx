@@ -16,15 +16,17 @@ import {
   ShoppingBag,
   Edit,
 } from "@mui/icons-material";
+import {useCart} from "../context/Context"
 
 export default function ProfileCard() {
-  const user = {
-    name: "John Doe",
-    email: "john@example.com",
-    role: "Customer",
-    orders: 12,
-    avatar: "https://i.pravatar.cc/300?img=12",
-  };
+  // const user = {
+  //   name: "John Doe",
+  //   email: "john@example.com",
+  //   role: "Customer",
+  //   orders: 12,
+  //   avatar: "https://i.pravatar.cc/300?img=12",
+  // };'
+  const {userData,addCart} = useCart();
 
   return (
     <div className="d-flex justify-content-center w-100">
@@ -46,7 +48,7 @@ export default function ProfileCard() {
       <CardContent sx={{ mt: -7 }}>
         <Stack alignItems="center" spacing={2}>
           <Avatar
-            src={user.avatar}
+            src={userData?.avatar}
             sx={{
               width: 110,
               height: 110,
@@ -56,15 +58,15 @@ export default function ProfileCard() {
 
           <Box textAlign="center">
             <Typography variant="h5" fontWeight={700}>
-              {user.name}
+              {userData?.username}
             </Typography>
 
             <Typography color="text.secondary">
-              {user.email}
+              {userData?.email}
             </Typography>
 
             <Chip
-              label={user.role}
+              label={userData?.role}
               color="primary"
               size="small"
               sx={{ mt: 1 }}
@@ -83,7 +85,7 @@ export default function ProfileCard() {
             <Person color="primary" />
 
             <Typography>
-              Account Type: <strong>{user.role}</strong>
+              Account Type: <strong>{userData?.role}</strong>
             </Typography>
           </Stack>
 
@@ -94,7 +96,7 @@ export default function ProfileCard() {
           >
             <Email color="primary" />
 
-            <Typography>{user.email}</Typography>
+            <Typography>{userData?.email}</Typography>
           </Stack>
 
           <Stack
@@ -105,7 +107,7 @@ export default function ProfileCard() {
             <ShoppingBag color="primary" />
 
             <Typography>
-              Orders: <strong>{user.orders}</strong>
+              Orders: <strong>{userData?.orders}</strong>
             </Typography>
           </Stack>
         </Stack>

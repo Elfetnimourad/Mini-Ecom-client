@@ -1,7 +1,43 @@
-import React, { useState } from "react";
-
+import React, { useState,useRef } from "react";
+import { useNavigate } from "react-router-dom";
 export default function SignUp() {
+  
   const [profilePic, setProfilePic] = useState(null);
+  const [username,setUsername] = useState("");
+  const [email,setEmail] = useState("");
+  const[password,setPassword] = useState("");
+  const inputRefPic = useRef();
+  const navigate = useNavigate()
+
+  const handleFileRef = ()=>{
+    inputRefPic.current.click()
+  }
+
+  //register
+  const register = async(e)=>{
+    e.preventDefault()
+    const formData = new FormData();
+    formData.append("username",username);
+    formData.append("email",email);
+    formData.append("password",password);
+    formData.append("avatar",profilePic);
+
+    try{
+     const res =  await fetch("http://localhost:7000/users/register",{
+      method:"POST",
+      body:formData
+     })
+    const data = await res.json()
+    if(res.ok){
+      alert(`Hi ${username},Go Shopping Here`)
+      navigate("/login")
+    }
+     res.status(201).json(`Hi ${username},Go Shopping Here`)
+     
+    }catch(error){
+     console.error(error)
+    }
+  }
 console.log("profile",profilePic)
   return (
     <div
@@ -46,11 +82,13 @@ console.log("profile",profilePic)
               type="text"
               className="form-control form-control-lg"
               placeholder="John Doe"
+              value={username}
+              onChange={(e)=>setUsername(e.target.value)}
             />
           </div>
 {/* Profile Picture */}
 <div className="mb-3">
-  <label className="form-label fw-semibold">
+  <label className="form-label fw-semibold" onClick={handleFileRef}>
     Profile Picture
   </label>
 
@@ -58,6 +96,7 @@ console.log("profile",profilePic)
     type="file"
     className="form-control form-control-lg"
     accept="image/*"
+    ref={inputRefPic}
     onChange={(e)=>setProfilePic(e.target.files[0])}
   />
 
@@ -75,6 +114,8 @@ console.log("profile",profilePic)
               type="email"
               className="form-control form-control-lg"
               placeholder="john@example.com"
+              value={email}
+              onChange={(e)=>setEmail(e.target.value)}
             />
           </div>
 
@@ -88,22 +129,10 @@ console.log("profile",profilePic)
               type="password"
               className="form-control form-control-lg"
               placeholder="Create a password"
+              value={password}
+              onChange={(e)=>setPassword(e.target.value)}
             />
           </div>
-
-          {/* Confirm Password */}
-          <div className="mb-3">
-            <label className="form-label fw-semibold">
-              Confirm Password
-            </label>
-
-            <input
-              type="password"
-              className="form-control form-control-lg"
-              placeholder="Confirm your password"
-            />
-          </div>
-
           {/* Terms */}
           <div className="form-check mb-4">
             <input
@@ -117,7 +146,7 @@ console.log("profile",profilePic)
               htmlFor="terms"
             >
               I agree to the{" "}
-              <a href="/" className="text-decoration-none">
+              <a href="/terms" className="text-decoration-none">
                 Terms & Conditions
               </a>
             </label>
@@ -127,23 +156,13 @@ console.log("profile",profilePic)
           <button
             className="btn btn-primary w-100 py-3 fw-bold rounded-3"
             type="button"
-            
+            onClick={register}
           >
             Create Account
           </button>
 
           {/* Divider */}
-          <div className="text-center text-muted my-4">
-            ────── OR ──────
-          </div>
-
-          {/* Google */}
-          <button
-            className="btn btn-outline-dark w-100 py-3 rounded-3 fw-semibold"
-            type="button"
-          >
-            Continue with Google
-          </button>
+       
 
           {/* Login */}
           <div className="text-center mt-4">

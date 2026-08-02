@@ -9,16 +9,43 @@ import MenuItem from '@mui/material/MenuItem';
 import { useNavigate, useParams } from 'react-router-dom';
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import IconButton from "@mui/material/IconButton";
-import { useState } from 'react';
+import { useState,useEffect } from 'react';
 import { useCart } from '../../context/Context';
-
+import Profile from "../../components/Profile"
 export default function Home(){
   const {addCart,handleAddToCart} = useCart();
-      const [anchorEl, setAnchorEl] = useState(null);
-      const [searchProduct, setSearchProduct] = useState([...itemData]);
-
-      let navigate = useNavigate();
+  const [anchorEl, setAnchorEl] = useState(null);
+  const[data,setData] = useState()
+  const [searchProduct, setSearchProduct] = useState([...itemData]);
+  let navigate = useNavigate();
   const open = Boolean(anchorEl);
+
+useEffect(() => {
+  const getMe = async () => {
+    try {
+      const token =
+        sessionStorage.getItem("token")||
+        localStorage.getItem("token") ;
+console.log("token",token)
+      if (!token) return;
+console.log("token",token)
+      const res = await fetch(
+  `http://localhost:7000/users/getMe?token=${encodeURIComponent(token)}`
+);
+
+
+      const data = await res.json();
+
+      setData(data);
+      console.log(data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  getMe();
+}, []);
+
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
