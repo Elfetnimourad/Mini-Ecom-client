@@ -6,6 +6,15 @@ import ImageListItemBar from '@mui/material/ImageListItemBar';
 import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
+import CategoryIcon from "@mui/icons-material/Category";
+import SportsBasketballIcon from "@mui/icons-material/SportsBasketball";
+import ComputerIcon from "@mui/icons-material/Computer";
+import CheckroomIcon from "@mui/icons-material/Checkroom";
+import HomeIcon from "@mui/icons-material/Home";
+import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
+import SortIcon from "@mui/icons-material/Sort";
+import Divider from "@mui/material/Divider";
+import ListSubheader from "@mui/material/ListSubheader";
 import { useNavigate, useParams } from 'react-router-dom';
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import IconButton from "@mui/material/IconButton";
@@ -66,6 +75,32 @@ console.log("token",token)
 
   setSearchProduct(filtered);
   }
+  const getHightPriceHandel = ()=>{
+    const sortedHighPrice = searchProduct.sort((a,b)=>b.price - a.price);
+     setSearchProduct((prev)=>[...prev,sortedHighPrice])
+     handleClose()
+
+    }
+   const getLowPriceHandel = ()=>{
+   const sortedLowPrice = searchProduct.sort((a,b)=>a.price - b.price)
+          setSearchProduct((prev)=>[...prev,sortedLowPrice])
+handleClose()
+
+  }
+  const getHighestRatingProducts = ()=>{
+    const highestRating = searchProduct.sort((a,b)=>b.rate - a.rate)
+          setSearchProduct((prev)=>[...prev,highestRating])
+handleClose()        
+  }
+  const getNewestProducts = () =>{
+
+  }
+  const soretdFromAtoZ = ()=>{
+
+  }
+  const soretdFromZtoA = ()=>{
+    
+  }
 return (
     <Box sx={{display:"flex",flexDirection:"column"}}>
         <Box sx={{display:"flex",flexDirection:"row",justifyContent:"space-between"}}>
@@ -81,29 +116,93 @@ return (
       >
         Category
       </Button>
-      <Menu
-        id="demo-positioned-menu"
-        aria-labelledby="demo-positioned-button"
-        anchorEl={anchorEl}
-        open={open}
-        onClose={handleClose}
-        anchorOrigin={{
-          vertical: 'top',
-          horizontal: 'left',
-        }}
-        transformOrigin={{
-          vertical: 'top',
-          horizontal: 'left',
-        }}
-      >
-        
-        <MenuItem onClick={handleClose}>Electronics</MenuItem>
-        <MenuItem onClick={handleClose}>Fashion</MenuItem>
-        <MenuItem onClick={handleClose}>Shoes</MenuItem>
-        <MenuItem onClick={handleClose}>Accessories</MenuItem>
-        <MenuItem onClick={handleClose}>Sports</MenuItem>
+    <Menu
+  id="demo-positioned-menu"
+  anchorEl={anchorEl}
+  open={open}
+  onClose={handleClose}
+  anchorOrigin={{
+    vertical: "bottom",
+    horizontal: "left",
+  }}
+  transformOrigin={{
+    vertical: "top",
+    horizontal: "left",
+  }}
+  PaperProps={{
+    sx: {
+      width: 260,
+      borderRadius: 3,
+      mt: 1,
+      boxShadow: "0 10px 25px rgba(0,0,0,.15)",
+    },
+  }}
+>
+  <ListSubheader>Categories</ListSubheader>
 
-      </Menu>
+  <MenuItem onClick={handleClose}>
+    <CategoryIcon sx={{ mr: 2 }} />
+    All Products
+  </MenuItem>
+
+  <MenuItem onClick={handleClose}>
+    <ComputerIcon sx={{ mr: 2 }} />
+    Electronics
+  </MenuItem>
+
+  <MenuItem onClick={handleClose}>
+    <SportsBasketballIcon sx={{ mr: 2 }} />
+    Sports
+  </MenuItem>
+
+  <MenuItem onClick={handleClose}>
+    <CheckroomIcon sx={{ mr: 2 }} />
+    Fashion
+  </MenuItem>
+
+  <MenuItem onClick={handleClose}>
+    <HomeIcon sx={{ mr: 2 }} />
+    Home
+  </MenuItem>
+
+  <Divider />
+
+  <ListSubheader>Price</ListSubheader>
+
+  <MenuItem onClick={getHightPriceHandel}>
+    <AttachMoneyIcon sx={{ mr: 2 }} />
+    Low → High
+  </MenuItem>
+
+  <MenuItem onClick={getLowPriceHandel}>
+    <AttachMoneyIcon sx={{ mr: 2 }} />
+    High → Low
+  </MenuItem>
+
+  <Divider />
+
+  <ListSubheader>Sort By</ListSubheader>
+
+  <MenuItem onClick={handleClose}>
+    <SortIcon sx={{ mr: 2 }} />
+    Highest Rating
+  </MenuItem>
+
+  <MenuItem onClick={handleClose}>
+    <SortIcon sx={{ mr: 2 }} />
+    Newest
+  </MenuItem>
+
+  <MenuItem onClick={handleClose}>
+    <SortIcon sx={{ mr: 2 }} />
+    A → Z
+  </MenuItem>
+
+  <MenuItem onClick={handleClose}>
+    <SortIcon sx={{ mr: 2 }} />
+    Z → A
+  </MenuItem>
+</Menu>
     </div>
   
         </Box>
