@@ -61,6 +61,8 @@ function App() {
           <Route element={<AdminLayout />}>
             <Route path="/admin" element={<Dashboard />} />
             <Route path="/admin/products" element={<Products />} />
+          <Route path="/admin/products/profile" element={<ProfileCard />} />
+
             <Route path="/admin/products/add" element={<AddProduct />} />
             <Route
               path="/admin/products/edit/:id"

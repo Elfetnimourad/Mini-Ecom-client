@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Avatar,
   Box,
@@ -18,12 +18,13 @@ import {
 } from "@mui/material";
 
 import { styled } from "@mui/material/styles";
-import { Link, Outlet, useLocation } from "react-router-dom";
+import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 
 import AddIcon from "@mui/icons-material/Add";
 import SearchIcon from "@mui/icons-material/Search";
 import EditIcon from "@mui/icons-material/Edit";
-// import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import DeleteIcon from '@mui/icons-material/Delete';
+
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -57,40 +58,52 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
-const products = [
-  {
-    id: 1,
-    name: "Nike Air Max",
-    image: "https://picsum.photos/60?1",
-    category: "Shoes",
-    price: "$120",
-    stock: 58,
-    rating: "4.8",
-    status: "Active",
-  },
-  {
-    id: 2,
-    name: "Wireless Headphones",
-    image: "https://picsum.photos/60?2",
-    category: "Electronics",
-    price: "$89",
-    stock: 5,
-    rating: "4.6",
-    status: "Low Stock",
-  },
-  {
-    id: 3,
-    name: "Leather Backpack",
-    image: "https://picsum.photos/60?3",
-    category: "Bags",
-    price: "$74",
-    stock: 0,
-    rating: "4.9",
-    status: "Out of Stock",
-  },
-];
-
 export default function Products() {
+  const navigate = useNavigate();
+  const [products,setProducts] = useState();
+  const [title,setTitle] = useState("");
+  const [searchProduct,setSearchProduct] = useState()
+  useEffect(()=>{
+const getAllProducts = async()=>{
+  try{
+const res = await fetch("http://localhost:7000/products/getProducts");
+const data = await res.json();
+setProducts(data);
+setSearchProduct(data)
+console.log("products",data)
+  }catch(error){
+    console.error(error)
+  }
+  
+}
+getAllProducts()
+  },[])
+
+
+  const editHandel = (product)=>{ 
+      navigate(`/admin/products/edit/${product._id}`)
+  }
+  const deleteHandel = async(product)=>{
+    try{
+      const res = await fetch(`http://localhost:7000/products/${product._id}`,{
+        method:"DELETE",
+      })
+      const data = await res.json();
+      console.log(data)
+    }catch(error){
+      console.error(error)
+    }
+  }
+  const searchProductHandler = (e)=>{
+    const value = e.target.value.trim();
+     setTitle(value)
+   if(!value){
+    setSearchProduct(products);
+    return;
+   }
+    const filtredProduct = products.filter(e=>value.toLowerCase().includes(e.name));
+    setSearchProduct(filtredProduct)
+  }
   return (
     <Box p={4} bgcolor="#F8FAFC" minHeight="100vh">
       {/* Header */}
@@ -141,6 +154,8 @@ export default function Products() {
           InputProps={{
             startAdornment: <SearchIcon sx={{ mr: 1, color: "gray" }} />,
           }}
+          value={title}
+          onChange={searchProductHandler}
         />
       </Box>
 
@@ -162,18 +177,18 @@ export default function Products() {
               <StyledTableCell>Price</StyledTableCell>
               <StyledTableCell>Stock</StyledTableCell>
               <StyledTableCell>Rating</StyledTableCell>
-              <StyledTableCell>Status</StyledTableCell>
+          
               <StyledTableCell align="center">Actions</StyledTableCell>
             </TableRow>
           </TableHead>
 
           <TableBody>
-            {products.map((product) => (
+            {searchProduct?.map((product) => (
               <StyledTableRow key={product.id}>
                 <StyledTableCell>
                   <Box display="flex" alignItems="center" gap={2}>
                     <Avatar
-                      src={product.image}
+                      src={product.cover}
                       sx={{ width: 55, height: 55 }}
                     />
                     <Typography fontWeight={600}>
@@ -201,29 +216,17 @@ export default function Products() {
                   />
                 </StyledTableCell>
 
-                <StyledTableCell>⭐ {product.rating}</StyledTableCell>
+                <StyledTableCell>⭐ {product.rate}</StyledTableCell>
 
-                <StyledTableCell>
-                  <Chip
-                    label={product.status}
-                    color={
-                      product.status === "Active"
-                        ? "success"
-                        : product.status === "Low Stock"
-                        ? "warning"
-                        : "error"
-                    }
-                    sx={{ fontWeight: "bold" }}
-                  />
-                </StyledTableCell>
+                
 
                 <StyledTableCell align="center">
                   <IconButton color="primary">
-                    <EditIcon />
+                    <EditIcon onClick={()=>editHandel(product)}/>
                   </IconButton>
 
                   <IconButton color="error">
-                    {/* <DeleteOutlineIcon /> */}
+                    <DeleteIcon onClick={()=>deleteHandel(product)}/>
                   </IconButton>
                 </StyledTableCell>
               </StyledTableRow>

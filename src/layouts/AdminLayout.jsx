@@ -24,7 +24,7 @@ import {
   ShoppingBag,
 } from "@mui/icons-material";
 
-import { Link, Outlet, useLocation } from "react-router-dom";
+import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 
 const drawerWidth = 260;
 
@@ -43,7 +43,10 @@ const menuItems = [
 
 export default function AdminLayout() {
   const location = useLocation();
-
+  const navigate = useNavigate()
+const logoutHandler = ()=>{
+navigate("/login")
+}
   return (
     <Box sx={{ display: "flex", bgcolor: "#f5f7fb" }}>
       <CssBaseline />
@@ -113,7 +116,7 @@ export default function AdminLayout() {
 
         <List>
           <ListItemButton sx={{ color: "#ef4444" }}>
-            <ListItemIcon sx={{ color: "#ef4444" }}>
+            <ListItemIcon sx={{ color: "#ef4444" }} onClick={logoutHandler}>
               <Logout />
             </ListItemIcon>
 
@@ -151,10 +154,26 @@ export default function AdminLayout() {
                 </Badge>
               </IconButton>
 
-              <Avatar
-                src="https://i.pravatar.cc/150?img=12"
-                sx={{ width: 40, height: 40 }}
-              />
+             <Stack
+  direction="row"
+  spacing={1.2}
+  alignItems="center"
+>
+  <Avatar
+    src="https://i.pravatar.cc/150?img=12"
+    sx={{ width: 40, height: 40 }}
+    onClick={()=>navigate('/admin/products/profile')}
+  />
+
+  <Typography
+   variant="caption"
+  sx={{ color: "#6b7280", fontSize: "11px" }}
+  >
+    Administrator
+  </Typography>
+</Stack>
+
+
             </Stack>
           </Toolbar>
         </AppBar>

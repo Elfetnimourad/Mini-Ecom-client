@@ -22,31 +22,69 @@ import { useState,useEffect } from 'react';
 import { useCart } from '../../context/Context';
 import Profile from "../../components/Profile"
 export default function Home(){
-  const {addCart,handleAddToCart} = useCart();
-  const [anchorEl, setAnchorEl] = useState(null);
-  const[data,setData] = useState()
-  const [searchProduct, setSearchProduct] = useState([...itemData]);
-  let navigate = useNavigate();
-  const open = Boolean(anchorEl);
+ const { addCart, handleAddToCart } = useCart();
 
+const [anchorEl, setAnchorEl] = useState(null);
+const [data, setData] = useState(null);
+
+const [products, setProducts] = useState([]);
+const [searchProduct, setSearchProduct] = useState([]);
+
+const navigate = useNavigate();
+
+const open = Boolean(anchorEl);
+
+
+// ===============================
+// GET ALL PRODUCTS
+// ===============================
+useEffect(() => {
+  const getAllProducts = async () => {
+    try {
+      const res = await fetch(
+        "http://localhost:7000/products/getProducts"
+      );
+
+      const data = await res.json();
+
+      setProducts(data);
+      setSearchProduct(data);
+
+      console.log("products", data);
+
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  getAllProducts();
+}, []);
+
+
+// ===============================
+// GET CURRENT USER
+// ===============================
 useEffect(() => {
   const getMe = async () => {
     try {
       const token =
-        sessionStorage.getItem("token")||
-        localStorage.getItem("token") ;
-console.log("token",token)
-      if (!token) return;
-console.log("token",token)
-      const res = await fetch(
-  `http://localhost:7000/users/getMe?token=${encodeURIComponent(token)}`
-);
+        sessionStorage.getItem("token") ||
+        localStorage.getItem("token");
 
+      if (!token) return;
+
+      console.log("token", token);
+
+      const res = await fetch(
+        `http://localhost:7000/users/getMe?token=${encodeURIComponent(token)}`
+      );
 
       const data = await res.json();
 
       setData(data);
-      console.log(data);
+
+      console.log("user", data);
+
     } catch (error) {
       console.error(error);
     }
@@ -55,52 +93,111 @@ console.log("token",token)
   getMe();
 }, []);
 
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-  const searchProductHandler = (e)=>{
-    const value = e.target.value;
 
-  if (value.trim() === "") {
-    setSearchProduct(itemData); // Show all products
+// ===============================
+// MENU
+// ===============================
+const handleClick = (event) => {
+  setAnchorEl(event.currentTarget);
+};
+
+const handleClose = () => {
+  setAnchorEl(null);
+};
+
+
+// ===============================
+// SEARCH
+// ===============================
+const searchProductHandler = (e) => {
+  const value = e.target.value.toLowerCase().trim();
+
+  // Empty search → show all products
+  if (value === "") {
+    setSearchProduct(products);
     return;
   }
 
-  const filtered = itemData.filter((p) =>
-    p.title.toLowerCase().includes(value.toLowerCase())
+  const filtered = products.filter((product) =>
+    product.name?.toLowerCase().includes(value)
   );
 
   setSearchProduct(filtered);
-  }
-  const getHightPriceHandel = ()=>{
-    const sortedHighPrice = searchProduct.sort((a,b)=>b.price - a.price);
-     setSearchProduct((prev)=>[...prev,sortedHighPrice])
-     handleClose()
+};
 
-    }
-   const getLowPriceHandel = ()=>{
-   const sortedLowPrice = searchProduct.sort((a,b)=>a.price - b.price)
-          setSearchProduct((prev)=>[...prev,sortedLowPrice])
-handleClose()
 
-  }
-  const getHighestRatingProducts = ()=>{
-    const highestRating = searchProduct.sort((a,b)=>b.rate - a.rate)
-          setSearchProduct((prev)=>[...prev,highestRating])
-handleClose()        
-  }
-  const getNewestProducts = () =>{
+// ===============================
+// ALL PRODUCTS
+// ===============================
+const getAllProducts = () => {
+  setSearchProduct(products);
+  handleClose();
+};
 
-  }
-  const soretdFromAtoZ = ()=>{
 
-  }
-  const soretdFromZtoA = ()=>{
-    
-  }
+// ===============================
+// PRICE: HIGH → LOW
+// ===============================
+const getHighPriceHandler = () => {
+  const sorted = [...searchProduct].sort(
+    (a, b) => Number(b.price) - Number(a.price)
+  );
+
+  setSearchProduct(sorted);
+  handleClose();
+};
+
+
+// ===============================
+// PRICE: LOW → HIGH
+// ===============================
+const getLowPriceHandler = () => {
+  const sorted = [...searchProduct].sort(
+    (a, b) => Number(a.price) - Number(b.price)
+  );
+
+  setSearchProduct(sorted);
+  handleClose();
+};
+
+
+// ===============================
+// HIGHEST RATING
+// ===============================
+const getHighestRatingProducts = () => {
+  const sorted = [...searchProduct].sort(
+    (a, b) => Number(b.rate) - Number(a.rate)
+  );
+
+  setSearchProduct(sorted);
+  handleClose();
+};
+
+
+// ===============================
+// NEWEST PRODUCTS
+// ===============================
+const getNewestProducts = () => {
+  const sorted = [...searchProduct].sort(
+    (a, b) => new Date(b.timestamp) - new Date(a.timestamp)
+  );
+
+  setSearchProduct(sorted);
+  handleClose();
+};
+
+
+// ===============================
+// CATEGORY
+// ===============================
+const getCategoryProduct = (type) => {
+  const filtered = products.filter(
+    (product) => product.category === type
+  );
+
+  setSearchProduct(filtered);
+  handleClose();
+};
 return (
     <Box sx={{display:"flex",flexDirection:"column"}}>
         <Box sx={{display:"flex",flexDirection:"row",justifyContent:"space-between"}}>
@@ -140,41 +237,38 @@ return (
 >
   <ListSubheader>Categories</ListSubheader>
 
-  <MenuItem onClick={handleClose}>
+  <MenuItem onClick={getAllProducts}>
     <CategoryIcon sx={{ mr: 2 }} />
     All Products
   </MenuItem>
 
-  <MenuItem onClick={handleClose}>
+  <MenuItem onClick={()=>getCategoryProduct("Electronics")}>
     <ComputerIcon sx={{ mr: 2 }} />
     Electronics
   </MenuItem>
 
-  <MenuItem onClick={handleClose}>
+  <MenuItem onClick={()=>getCategoryProduct("Sports")}>
     <SportsBasketballIcon sx={{ mr: 2 }} />
     Sports
   </MenuItem>
 
-  <MenuItem onClick={handleClose}>
+  <MenuItem onClick={()=>getCategoryProduct("Fashion")}>
     <CheckroomIcon sx={{ mr: 2 }} />
     Fashion
   </MenuItem>
 
-  <MenuItem onClick={handleClose}>
-    <HomeIcon sx={{ mr: 2 }} />
-    Home
-  </MenuItem>
+ 
 
   <Divider />
 
   <ListSubheader>Price</ListSubheader>
 
-  <MenuItem onClick={getHightPriceHandel}>
+  <MenuItem onClick={getLowPriceHandler}>
     <AttachMoneyIcon sx={{ mr: 2 }} />
     Low → High
   </MenuItem>
 
-  <MenuItem onClick={getLowPriceHandel}>
+  <MenuItem onClick={getHighPriceHandler}>
     <AttachMoneyIcon sx={{ mr: 2 }} />
     High → Low
   </MenuItem>
@@ -183,24 +277,14 @@ return (
 
   <ListSubheader>Sort By</ListSubheader>
 
-  <MenuItem onClick={handleClose}>
+  <MenuItem onClick={getHighestRatingProducts}>
     <SortIcon sx={{ mr: 2 }} />
     Highest Rating
   </MenuItem>
 
-  <MenuItem onClick={handleClose}>
+  <MenuItem onClick={getNewestProducts}>
     <SortIcon sx={{ mr: 2 }} />
     Newest
-  </MenuItem>
-
-  <MenuItem onClick={handleClose}>
-    <SortIcon sx={{ mr: 2 }} />
-    A → Z
-  </MenuItem>
-
-  <MenuItem onClick={handleClose}>
-    <SortIcon sx={{ mr: 2 }} />
-    Z → A
   </MenuItem>
 </Menu>
     </div>
@@ -216,9 +300,9 @@ return (
   cols={3}
   gap={24}
 >
-  {searchProduct.map((item) => (
+  {searchProduct?.map((item) => (
     <ImageListItem
-      key={item.img}
+      key={item.cover}
       sx={{
         borderRadius: 4,
         overflow: "hidden",
@@ -246,15 +330,15 @@ return (
       
     >
       <img
-        src={`${item.img}?w=500&fit=crop&auto=format`}
-        srcSet={`${item.img}?w=500&fit=crop&auto=format&dpr=2 2x`}
-        alt={item.title}
+        src={`${item.cover}?w=500&fit=crop&auto=format`}
+        srcSet={`${item.cover}?w=500&fit=crop&auto=format&dpr=2 2x`}
+        alt={item.name}
         loading="lazy"
         onClick={() => navigate(`/product/${item.id}`)}
       />
 
       <ImageListItemBar
-        title={item.title}
+        title={item.name}
         subtitle={
           <Box
             sx={{
@@ -323,101 +407,101 @@ return (
   );
 }
 
-const itemData = [
-  {
-    id:1,
-    img: 'https://images.unsplash.com/photo-1551963831-b3b1ca40c98e',
-    title: 'Breakfast',
-    author: '@bkristastucchio',
-    price:1000,
-    rate:4
-  },
-  {
-    id:2,
-    img: 'https://images.unsplash.com/photo-1551782450-a2132b4ba21d',
-    title: 'Burger',
-    author: '@rollelflex_graphy726',
-    price:2000,
-    rate:4.5
-  },
-  {
-    id:3,
-    img: 'https://images.unsplash.com/photo-1522770179533-24471fcdba45',
-    title: 'Camera',
-    author: '@helloimnik',
-    price:1050,
-    rate:3.5
-  },
-  {
-    id:4,
-    img: 'https://images.unsplash.com/photo-1444418776041-9c7e33cc5a9c',
-    title: 'Coffee',
-    author: '@nolanissac',
-    price:500,
-    rate:6.9
-  },
-  {
-    id:5,
-    img: 'https://images.unsplash.com/photo-1533827432537-70133748f5c8',
-    title: 'Hats',
-    author: '@hjrc33',
-    price:900,
-    rate:4.7
-  },
-  {
-    id:1,
-    img: 'https://images.unsplash.com/photo-1558642452-9d2a7deb7f62',
-    title: 'Honey',
-    author: '@arwinneil',
-    price:500,
-    rate:5.3
-  },
-  {
-    id:6,
-    img: 'https://images.unsplash.com/photo-1516802273409-68526ee1bdd6',
-    title: 'Basketball',
-    author: '@tjdragotta',
-    price:450,
-    rate:4.1
-  },
-  {
-    id:7,
-    img: 'https://images.unsplash.com/photo-1518756131217-31eb79b20e8f',
-    title: 'Fern',
-    author: '@katie_wasserman',
-    price:300,
-    rate:4.9
-  },
-  {
-    id:8,
-    img: 'https://images.unsplash.com/photo-1597645587822-e99fa5d45d25',
-    title: 'Mushrooms',
-    author: '@silverdalex',
-    price:1700,
-    rate:4.3,
-  },
-  {
-    id:9,
-    img: 'https://images.unsplash.com/photo-1567306301408-9b74779a11af',
-    title: 'Tomato basil',
-    author: '@shelleypauls',
-    price:700,
-    rate:3.9
-  },
-  {
-    id:10,
-    img: 'https://images.unsplash.com/photo-1471357674240-e1a485acb3e1',
-    title: 'Sea star',
-    author: '@peterlaster',
-    price:200,
-    rate:1.4
-  },
-  {
-    id:11,
-    img: 'https://images.unsplash.com/photo-1589118949245-7d38baf380d6',
-    title: 'Bike',
-    author: '@southside_customs',
-    price:100,
-    rate:4.6
-  },
-];
+// const itemData = [
+//   {
+//     id:1,
+//     img: 'https://images.unsplash.com/photo-1551963831-b3b1ca40c98e',
+//     title: 'Breakfast',
+//     author: '@bkristastucchio',
+//     price:1000,
+//     rate:4
+//   },
+//   {
+//     id:2,
+//     img: 'https://images.unsplash.com/photo-1551782450-a2132b4ba21d',
+//     title: 'Burger',
+//     author: '@rollelflex_graphy726',
+//     price:2000,
+//     rate:4.5
+//   },
+//   {
+//     id:3,
+//     img: 'https://images.unsplash.com/photo-1522770179533-24471fcdba45',
+//     title: 'Camera',
+//     author: '@helloimnik',
+//     price:1050,
+//     rate:3.5
+//   },
+//   {
+//     id:4,
+//     img: 'https://images.unsplash.com/photo-1444418776041-9c7e33cc5a9c',
+//     title: 'Coffee',
+//     author: '@nolanissac',
+//     price:500,
+//     rate:6.9
+//   },
+//   {
+//     id:5,
+//     img: 'https://images.unsplash.com/photo-1533827432537-70133748f5c8',
+//     title: 'Hats',
+//     author: '@hjrc33',
+//     price:900,
+//     rate:4.7
+//   },
+//   {
+//     id:1,
+//     img: 'https://images.unsplash.com/photo-1558642452-9d2a7deb7f62',
+//     title: 'Honey',
+//     author: '@arwinneil',
+//     price:500,
+//     rate:5.3
+//   },
+//   {
+//     id:6,
+//     img: 'https://images.unsplash.com/photo-1516802273409-68526ee1bdd6',
+//     title: 'Basketball',
+//     author: '@tjdragotta',
+//     price:450,
+//     rate:4.1
+//   },
+//   {
+//     id:7,
+//     img: 'https://images.unsplash.com/photo-1518756131217-31eb79b20e8f',
+//     title: 'Fern',
+//     author: '@katie_wasserman',
+//     price:300,
+//     rate:4.9
+//   },
+//   {
+//     id:8,
+//     img: 'https://images.unsplash.com/photo-1597645587822-e99fa5d45d25',
+//     title: 'Mushrooms',
+//     author: '@silverdalex',
+//     price:1700,
+//     rate:4.3,
+//   },
+//   {
+//     id:9,
+//     img: 'https://images.unsplash.com/photo-1567306301408-9b74779a11af',
+//     title: 'Tomato basil',
+//     author: '@shelleypauls',
+//     price:700,
+//     rate:3.9
+//   },
+//   {
+//     id:10,
+//     img: 'https://images.unsplash.com/photo-1471357674240-e1a485acb3e1',
+//     title: 'Sea star',
+//     author: '@peterlaster',
+//     price:200,
+//     rate:1.4
+//   },
+//   {
+//     id:11,
+//     img: 'https://images.unsplash.com/photo-1589118949245-7d38baf380d6',
+//     title: 'Bike',
+//     author: '@southside_customs',
+//     price:100,
+//     rate:4.6
+//   },
+// ];
