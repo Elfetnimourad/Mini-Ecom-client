@@ -185,7 +185,7 @@ const getNewestProducts = () => {
   setSearchProduct(sorted);
   handleClose();
 };
-
+console.log("searchProduct",searchProduct)
 
 // ===============================
 // CATEGORY

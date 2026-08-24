@@ -27,6 +27,8 @@ import { ShoppContextProvider } from './context/Context';
 import TermsConditions from './pages/user/TermsConditions';
 import ResetPassword from './pages/user/ResetPassword';
 import ForgotPassword from './pages/user/ForgotPassword';
+import Orders from './pages/admin/Orders';
+import OrdersView from './pages/admin/OrdersView';
 
 function App() {
   return (
@@ -62,8 +64,11 @@ function App() {
             <Route path="/admin" element={<Dashboard />} />
             <Route path="/admin/products" element={<Products />} />
           <Route path="/admin/products/profile" element={<ProfileCard />} />
+          <Route path="/admin/orders" element={<Orders />} />
 
             <Route path="/admin/products/add" element={<AddProduct />} />
+            <Route path="/admin/orders/ordersView/:orderId" element={<OrdersView />} />
+
             <Route
               path="/admin/products/edit/:id"
               element={<EditProduct />}

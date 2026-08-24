@@ -62,7 +62,7 @@ export default function Products() {
   const navigate = useNavigate();
   const [products,setProducts] = useState();
   const [title,setTitle] = useState("");
-  const [searchProduct,setSearchProduct] = useState()
+  const [searchProduct,setSearchProduct] = useState();
   useEffect(()=>{
 const getAllProducts = async()=>{
   try{

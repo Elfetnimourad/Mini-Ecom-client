@@ -78,7 +78,7 @@ console.log("updateCart",addCart)
           style={{ maxHeight: "50vh" }}
         >
           {addCart.map(product=>
-          <div className="row align-items-center py-4 border-bottom">
+          <div className="row align-items-center py-4 border-bottom" key={product.id}>
             <div className="col-3">
               <img
                 src={product.productImg}

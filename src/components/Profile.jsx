@@ -26,7 +26,7 @@ export default function ProfileCard() {
   //   orders: 12,
   //   avatar: "https://i.pravatar.cc/300?img=12",
   // };'
-  const {userData,addCart} = useCart();
+  const {userData,orders,addCart} = useCart();
 
   return (
     <div className="d-flex justify-content-center w-100">
@@ -99,17 +99,7 @@ export default function ProfileCard() {
             <Typography>{userData?.email}</Typography>
           </Stack>
 
-          <Stack
-            direction="row"
-            alignItems="center"
-            spacing={2}
-          >
-            <ShoppingBag color="primary" />
-
-            <Typography>
-              Orders: <strong>{userData?.orders}</strong>
-            </Typography>
-          </Stack>
+         
         </Stack>
 
         <Button

@@ -3,7 +3,8 @@ import { useNavigate, useParams } from "react-router-dom";
 
 export default function EditProduct() {
   const navigate = useNavigate()
-  const inputRef = useRef()
+  const inputRef = useRef();
+  const [product,setProduct] = useState()
   const [name,setName] = useState("");
   const [price,setPrice] = useState();
   
@@ -14,21 +15,24 @@ export default function EditProduct() {
   const [description,setDescription] = useState("");
   const [brand,setBrand] = useState("");
   const formData = new FormData();
- 
 
 
   const params = useParams();
   const {id} = params;
+  console.log("id",id)
   useEffect(()=>{
 const getSingleProduct = async()=>{
   try{
 const res = await fetch(`http://localhost:7000/products/getSingleProduct/${id}`)
-const data = await res.json()
+const data = await res.json();
+setProduct(data);
+console.log("product",product)
 console.log("product",data)
   }catch(error){
     console.error(error)
   }
 }
+getSingleProduct()
   },[])
   const saveEditing = async()=>{
      try{
@@ -41,7 +45,7 @@ console.log("product",data)
   formData.set("description",description);
   formData.set("brand",brand)
 
-const res = await fetch(`http://localhost:7000/products/${id}`,{
+const res = await fetch(`http://localhost:7000/products/getSingleProduct/${id}`,{
   method:"PATCH",
   headers:{
     "Content-Type":"application/json"
@@ -129,7 +133,7 @@ console.log("updated product",data)
                   borderRadius: "12px",
                   padding: "12px 16px",
                 }}
-                value={name}
+                value={name || product?.name}
                 onChange={(e)=>setName(e.target.value)}
               />
             </div>
@@ -144,7 +148,7 @@ console.log("updated product",data)
                 <select
                   className="form-select form-select-lg"
                   style={{ borderRadius: "12px" }}
-                  value={category}
+                  value={category || product?.category}
                 onChange={(e)=>setCategory(e.target.value)}
                 >
                   <option>Select Category</option>
@@ -169,7 +173,7 @@ console.log("updated product",data)
                   style={{
                     borderRadius: "12px",
                   }}
-                  value={brand}
+                  value={brand || product?.brand}
                 onChange={(e)=>setBrand(e.target.value)}
                 />
               </div>
@@ -204,7 +208,7 @@ console.log("updated product",data)
         style={{
           borderRadius: "0 12px 12px 0",
         }}
-        value={price}
+        value={price || product?.price}
         onChange={(e) => setPrice(e.target.value)}
       />
     </div>
@@ -224,7 +228,7 @@ console.log("updated product",data)
       style={{
         borderRadius: "12px",
       }}
-      value={stock}
+      value={stock || product?.price}
       onChange={(e) => setStock(e.target.value)}
     />
   </div>
@@ -245,7 +249,7 @@ console.log("updated product",data)
       style={{
         borderRadius: "12px",
       }}
-      value={rate}
+      value={rate || product?.rate}
       onChange={(e) => setRate(e.target.value)}
     />
 
@@ -295,7 +299,7 @@ console.log("updated product",data)
                   style={{
                     borderRadius: "12px",
                   }}
-                  ref={inputRef}
+                  ref={inputRef || product?.cover}
                   onChange={chooseImageProduct}
                 />
               </div>
@@ -316,7 +320,7 @@ console.log("updated product",data)
                   resize: "vertical",
                   padding: "14px",
                 }}
-                value={description}
+                value={description || product?.description}
                 onChange={(e)=>setDescription(e.target.value)}
               ></textarea>
             </div>

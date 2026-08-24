@@ -16,7 +16,13 @@ import PaymentIcon from "@mui/icons-material/Payment";
 import { useCart } from "../../context/Context";
 
 const Checkout = () => {
-  const { addCart } = useCart();
+  const { addCart,userData } = useCart();
+  // id: item.id,
+  //       productImg: item.img,
+  //       productTitle: item.title,
+  //       productPrice: item.price,
+  //       quantity: 1,
+  //       total: item.price,
 
   // Replace this with your logged-in user
   const user = {
@@ -30,30 +36,58 @@ const Checkout = () => {
     (total, item) => total + item.total,
     0
   );
-
+console.log("totalPrice",totalPrice)
   const totalItems = addCart.reduce(
     (total, item) => total + item.quantity,
     0
   );
-
-  const handlePlaceOrder = () => {
-    console.log({
-      user,
-      items: addCart,
+  console.log("addCart",addCart)
+console.log(({
+      user:userData?._id,
+      items:addCart.map(item => ({
+    product: item?.id,
+    quantity: item?.quantity,
+    price: item?.productPrice
+  })),
       totalPrice,
-    });
+    }))
+  const handlePlaceOrder = async() => {
+try{
+   const response =await fetch("http://localhost:7000/orders/createOrder",{
+    method:"POST",
+    headers:{
+      "Content-Type":"application/json"
+    },
+    body:JSON.stringify({
+      user:userData._id,
+      items:addCart.map(item => ({
+    product: item.id,
+    quantity: item.quantity,
+    price: item.productPrice
+  })),
+      totalPrice
+    })
+   })
+   const data = await response.json()
 
-    alert("Order placed successfully!");
+console.log("data",data)
+
+  }catch(error){
+console.log(error)
+}
+
+
+    // alert("Order placed successfully!");
   };
-
+console.log("userData",userData)
   return (
     <Box
       sx={{
         minHeight: "100vh",
         bgcolor: "#f5f7fa",
         display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
+        justifycontent: "center",
+        alignitems: "center",
         py: 5,
       }}
     >
@@ -70,14 +104,14 @@ const Checkout = () => {
           <Typography
             variant="h4"
             fontWeight="bold"
-            textAlign="center"
+            textalign="center"
             mb={4}
           >
             Checkout
           </Typography>
 
           {/* Customer */}
-          <Stack direction="row" spacing={2} alignItems="center" mb={4}>
+          <Stack direction="row" spacing={2} alignitems="center" mb={4}>
             <Avatar
               sx={{
                 width: 65,
@@ -106,7 +140,7 @@ const Checkout = () => {
           <Divider sx={{ mb: 4 }} />
 
           {/* Shipping */}
-          <Stack direction="row" spacing={1} alignItems="center" mb={2}>
+          <Stack direction="row" spacing={1} alignitems="center" mb={2}>
             <LocalShippingIcon color="primary" />
             <Typography variant="h6" fontWeight="bold">
               Shipping Address
@@ -120,7 +154,7 @@ const Checkout = () => {
           <Divider sx={{ mb: 4 }} />
 
           {/* Payment */}
-          <Stack direction="row" spacing={1} alignItems="center" mb={2}>
+          <Stack direction="row" spacing={1} alignitems="center" mb={2}>
             <PaymentIcon color="primary" />
             <Typography variant="h6" fontWeight="bold">
               Payment Method
@@ -136,7 +170,7 @@ const Checkout = () => {
           <Divider sx={{ mb: 4 }} />
 
           {/* Order Summary */}
-          <Stack direction="row" spacing={1} alignItems="center" mb={3}>
+          <Stack direction="row" spacing={1} alignitems="center" mb={3}>
             <ShoppingCartIcon color="primary" />
             <Typography variant="h6" fontWeight="bold">
               Order Summary
@@ -148,12 +182,12 @@ const Checkout = () => {
               key={item.id}
               sx={{
                 display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
+                justifycontent: "space-between",
+                alignitems: "center",
                 mb: 2,
               }}
             >
-              <Stack direction="row" spacing={2} alignItems="center">
+              <Stack direction="row" spacing={2} alignitems="center">
                 <img
                   src={item.productImg}
                   alt={item.productTitle}
@@ -189,7 +223,7 @@ const Checkout = () => {
           {/* Totals */}
           <Stack
             direction="row"
-            justifyContent="space-between"
+            justifycontent="space-between"
             mb={1}
           >
             <Typography>Total Items</Typography>
@@ -198,7 +232,7 @@ const Checkout = () => {
 
           <Stack
             direction="row"
-            justifyContent="space-between"
+            justifycontent="space-between"
             mb={1}
           >
             <Typography>Shipping</Typography>
@@ -211,7 +245,7 @@ const Checkout = () => {
 
           <Stack
             direction="row"
-            justifyContent="space-between"
+            justifycontent="space-between"
             mt={3}
           >
             <Typography variant="h5" fontWeight="bold">

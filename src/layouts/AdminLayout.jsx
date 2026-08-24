@@ -25,6 +25,7 @@ import {
 } from "@mui/icons-material";
 
 import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
+import { useCart } from "../context/Context";
 
 const drawerWidth = 260;
 
@@ -39,11 +40,18 @@ const menuItems = [
     icon: <Inventory2 />,
     path: "/admin/products",
   },
+  {
+    title: "Orders",
+    icon: <ShoppingBag />,
+    path: "/admin/orders",
+  },
 ];
 
 export default function AdminLayout() {
   const location = useLocation();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+  const{orders,userData,loading} = useCart();
+  
 const logoutHandler = ()=>{
 navigate("/login")
 }
@@ -147,9 +155,9 @@ navigate("/login")
               Admin Dashboard
             </Typography>
 
-            <Stack direction="row" spacing={2} alignItems="center">
-              <IconButton>
-                <Badge badgeContent={2} color="error">
+            <Stack direction="row" spacing={2} alignItems="center" >
+              <IconButton onClick={()=>navigate('/admin/orders')}>
+                <Badge badgeContent={orders?.length} color="error">
                   <Notifications />
                 </Badge>
               </IconButton>
@@ -160,7 +168,7 @@ navigate("/login")
   alignItems="center"
 >
   <Avatar
-    src="https://i.pravatar.cc/150?img=12"
+    src={userData?.avatar}
     sx={{ width: 40, height: 40 }}
     onClick={()=>navigate('/admin/products/profile')}
   />

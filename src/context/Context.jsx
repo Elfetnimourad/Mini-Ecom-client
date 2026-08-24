@@ -5,8 +5,32 @@ const shoppContext = createContext(null);
 
 export const ShoppContextProvider = ({ children }) => {
   const [addCart, setAddCart] = useState([]);
-    const[userData,setUserData] = useState()
+    const[userData,setUserData] = useState();
+    const[orders,setOrders] = useState();
+    const[loading,setLoading] = useState(true);
+
+
+    useEffect(() => {
+        const getOrders = async () => {
+          try {
+            const res = await fetch("http://localhost:7000/orders/getOrders");
     
+            if (!res.ok) {   
+              throw new Error("Failed to fetch orders");
+            }
+    
+            const data = await res.json();
+    
+            setOrders([...data]);
+          } catch (error) {
+            console.error(error);
+          } finally {
+            setLoading(false);
+          }
+        };
+    
+        getOrders();
+      }, []);
   
   useEffect(() => {
     const getMe = async () => {
@@ -56,9 +80,9 @@ export const ShoppContextProvider = ({ children }) => {
     });
   } else {
       const addedProduct = {
-        id: item.id,
-        productImg: item.img,
-        productTitle: item.title,
+        id: item._id,
+        productImg: item.cover,
+        productTitle: item.name,
         productPrice: item.price,
         quantity: 1,
         total: item.price,
@@ -74,7 +98,7 @@ setAddCart((prevCart) => {
   };
 
   return (
-    <shoppContext.Provider value={{ addCart, setAddCart,userData,handleAddToCart }}>
+    <shoppContext.Provider value={{ addCart, orders,loading,setAddCart,userData,handleAddToCart }}>
       {children}
     </shoppContext.Provider>
   );
