@@ -15,11 +15,19 @@ import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import TrendingUpIcon from "@mui/icons-material/TrendingUp";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
+import { useCart } from "../../context/Context";
+import { useNavigate } from "react-router-dom";
 
-const statCards = [
+
+
+export default function Dashboard() {
+  const navigate = useNavigate();
+  const {users,orders,products} = useCart();
+  const profit = orders?.reduce((total,item)=>item.totalPrice + total,0);
+  const statCards = [
   {
     title: "Total Users",
-    value: "1,248",
+    value: users?.length,
     change: "+12.5%",
     icon: <PeopleAltIcon />,
     iconBg: "#e0e7ff",
@@ -27,7 +35,7 @@ const statCards = [
   },
   {
     title: "Total Products",
-    value: "186",
+    value: products?.length,
     change: "+8.2%",
     icon: <Inventory2Icon />,
     iconBg: "#dbeafe",
@@ -35,7 +43,7 @@ const statCards = [
   },
   {
     title: "Total Orders",
-    value: "524",
+    value: orders?.length,
     change: "+15.7%",
     icon: <ShoppingBagIcon />,
     iconBg: "#dcfce7",
@@ -43,36 +51,13 @@ const statCards = [
   },
   {
     title: "Total Revenue",
-    value: "$24,850",
+    value: profit ,
     change: "+18.4%",
     icon: <AttachMoneyIcon />,
     iconBg: "#fef3c7",
     iconColor: "#d97706",
   },
 ];
-
-const users = [
-  { name: "Ahmed Benali", email: "ahmed@gmail.com", initial: "A" },
-  { name: "Sara Martin", email: "sara@gmail.com", initial: "S" },
-  { name: "Mohamed Ali", email: "mohamed@gmail.com", initial: "M" },
-  { name: "Yasmine Karim", email: "yasmine@gmail.com", initial: "Y" },
-];
-
-const products = [
-  { name: "Gaming Laptop", sales: 42, revenue: "$37,800", progress: 90 },
-  { name: "Camera", sales: 31, revenue: "$20,150", progress: 72 },
-  { name: "Headphones", sales: 58, revenue: "$6,960", progress: 64 },
-  { name: "Basketball", sales: 24, revenue: "$10,800", progress: 48 },
-];
-
-const orders = [
-  { id: "#1001", customer: "Ahmed", amount: "$120", status: "Completed" },
-  { id: "#1002", customer: "Sara", amount: "$450", status: "Completed" },
-  { id: "#1003", customer: "Mohamed", amount: "$220", status: "Pending" },
-  { id: "#1004", customer: "Yasmine", amount: "$780", status: "Completed" },
-];
-
-export default function Dashboard() {
   return (
     <Box
       sx={{
@@ -323,7 +308,7 @@ export default function Dashboard() {
                   mt: 4,
                 }}
               >
-                $10,000
+                ${profit - 15000}
               </Typography>
 
               <Typography color="text.secondary" mb={3}>
@@ -339,7 +324,7 @@ export default function Dashboard() {
                   }}
                 >
                   <Typography fontSize={14}>Revenue</Typography>
-                  <Typography fontWeight={700}>$25,000</Typography>
+                  <Typography fontWeight={700}>${profit}</Typography>
                 </Box>
 
                 <LinearProgress
@@ -423,7 +408,7 @@ export default function Dashboard() {
                 </Button>
               </Box>
 
-              {users.map((user) => (
+              {users?.map((user) => (
                 <Box
                   key={user.email}
                   sx={{
@@ -441,12 +426,12 @@ export default function Dashboard() {
                       fontWeight: 700,
                     }}
                   >
-                    {user.initial}
+                    {user.Avatar}
                   </Avatar>
 
                   <Box sx={{ flexGrow: 1 }}>
                     <Typography fontWeight={700} fontSize={14}>
-                      {user.name}
+                      {user.username}
                     </Typography>
 
                     <Typography
@@ -490,7 +475,7 @@ export default function Dashboard() {
                 </Button>
               </Box>
 
-              {products.map((product, index) => (
+              {products?.map((product, index) => (
                 <Box key={product.name} sx={{ mb: 2.5 }}>
                   <Box
                     sx={{
@@ -508,18 +493,19 @@ export default function Dashboard() {
                         color="text.secondary"
                         fontSize={12}
                       >
-                        {product.sales} sales
+                        {product.stock} stocks
                       </Typography>
                     </Box>
 
                     <Typography fontWeight={800}>
-                      {product.revenue}
+                      {product?.revenue}
                     </Typography>
                   </Box>
 
+
                   <LinearProgress
                     variant="determinate"
-                    value={product.progress}
+                    value={product.rate *  10}
                     sx={{
                       height: 7,
                       borderRadius: 10,
@@ -565,6 +551,7 @@ export default function Dashboard() {
               <Button
                 endIcon={<ArrowForwardIcon />}
                 sx={{ textTransform: "none" }}
+                onClick={()=>navigate("/admin/orders")}
               >
                 View Orders
               </Button>
@@ -596,9 +583,9 @@ export default function Dashboard() {
                   </Typography>
                 </Box>
 
-                {orders.map((order) => (
+                {orders?.map((order) => (
                   <Box
-                    key={order.id}
+                    key={order?._id}
                     sx={{
                       display: "grid",
                       gridTemplateColumns: "1fr 1.5fr 1fr 1fr",
@@ -607,16 +594,16 @@ export default function Dashboard() {
                       borderBottom: "1px solid #f1f5f9",
                     }}
                   >
-                    <Typography fontWeight={700}>
-                      {order.id}
+                    <Typography fontWeight={100}>
+                      #{order._id.slice(6)}...
                     </Typography>
 
                     <Typography color="text.secondary">
-                      {order.customer}
+                      {order.user.username}
                     </Typography>
 
                     <Typography fontWeight={700}>
-                      {order.amount}
+                      {order.totalPrice}
                     </Typography>
 
                     <Typography

@@ -24,6 +24,7 @@ import AddIcon from "@mui/icons-material/Add";
 import SearchIcon from "@mui/icons-material/Search";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from '@mui/icons-material/Delete';
+import { useCart } from "../../context/Context";
 
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -60,24 +61,8 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 
 export default function Products() {
   const navigate = useNavigate();
-  const [products,setProducts] = useState();
   const [title,setTitle] = useState("");
-  const [searchProduct,setSearchProduct] = useState();
-  useEffect(()=>{
-const getAllProducts = async()=>{
-  try{
-const res = await fetch("http://localhost:7000/products/getProducts");
-const data = await res.json();
-setProducts(data);
-setSearchProduct(data)
-console.log("products",data)
-  }catch(error){
-    console.error(error)
-  }
-  
-}
-getAllProducts()
-  },[])
+const {setSearchProduct,searchProduct,products} = useCart();
 
 
   const editHandel = (product)=>{ 

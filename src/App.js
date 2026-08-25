@@ -29,6 +29,8 @@ import ResetPassword from './pages/user/ResetPassword';
 import ForgotPassword from './pages/user/ForgotPassword';
 import Orders from './pages/admin/Orders';
 import OrdersView from './pages/admin/OrdersView';
+import OrdersUser from './pages/user/OrdersUser';
+import Settings from './pages/user/Settings';
 
 function App() {
   return (
@@ -47,6 +49,10 @@ function App() {
           <Route path="/profile" element={<ProfileCard />} />
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/terms" element={<TermsConditions />} />
+          <Route path="/orders-user" element={<OrdersUser />} />
+          <Route path="/settings" element={<Settings />} />
+
+
           <Route
   path="/reset-password/:token"
   element={<ResetPassword />}

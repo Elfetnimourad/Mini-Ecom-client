@@ -588,6 +588,7 @@ const{orders,loading} = useCart();
                           alignItems="center"
                         >
                           <Avatar
+                          src={order?.user.avatar}
                             sx={{
                               width: 36,
                               height: 36,
@@ -595,10 +596,7 @@ const{orders,loading} = useCart();
                               color: "#4338ca",
                               fontSize: 14,
                             }}
-                          >
-                            {order?.user.avatar}
-                          </Avatar>
-
+                          />
                           <Typography fontWeight={600}>
                             {customerName}
                           </Typography>

@@ -1,152 +1,279 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
 export default function ProductDetails() {
-  const [addCart,setAddCart] = useState([]);
-  let [quantityItem,setQuantityItem] = useState(1)
+  const [quantityItem, setQuantityItem] = useState(1);
+  const [product, setProduct] = useState(null);
+
   const { id } = useParams();
-const addToCart = (item)=>{
-  setQuantityItem(q=>q+1);
-  console.log("quantityItem",quantityItem)
-  const addedProduct = {productImg:item.img,quantity:quantityItem,productPrice:item.price,total:item.price*quantityItem}
-// const p = new Set([...addedProduct]);
-// console.log("p with set",p)
-  setAddCart((prevCart)=>[...prevCart,addedProduct]);
-console.log("addCart",addCart)
-}
+
+  useEffect(() => {
+    const getSingleProduct = async () => {
+      try {
+        const res = await fetch(
+          `http://localhost:7000/products/getSingleProduct/${id}`
+        );
+
+        const data = await res.json();
+        setProduct(data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    getSingleProduct();
+  }, [id]);
+
+  const increaseQuantity = () => {
+    if (quantityItem < product?.stock) {
+      setQuantityItem((q) => q + 1);
+    }
+  };
+
+  const decreaseQuantity = () => {
+    if (quantityItem > 1) {
+      setQuantityItem((q) => q - 1);
+    }
+  };
+
+  const addToCart = () => {
+    const addedProduct = {
+      product: product._id,
+      productImg: product.cover,
+      productName: product.name,
+      productPrice: product.price,
+      quantity: quantityItem,
+      total: product.price * quantityItem,
+    };
+
+    console.log("Product added:", addedProduct);
+  };
+
+  if (!product) {
+    return (
+      <div className="container py-5 text-center">
+        <h4>Loading product...</h4>
+      </div>
+    );
+  }
+
   return (
-    <div className="h-100 d-flex justify-content-center align-items-center">
-      {itemData
-        .filter((item) => item.id === Number(id))
-        .map((item) => (
+    <div className="container py-5">
+
+      <div className="row g-5">
+
+        {/* Product Image */}
+        <div className="col-md-6">
+
           <div
-            key={item.id}
-            className="card rounded"
-            style={{ width: "30rem" }}
+            className="card border-0 shadow-sm"
+            style={{ borderRadius: "16px" }}
           >
             <img
-              className="card-img-top"
-              src={item.img}
-              alt={item.title}
+              src={product.cover}
+              alt={product.name}
+              className="img-fluid"
+              style={{
+                width: "100%",
+                height: "450px",
+                objectFit: "contain",
+                borderRadius: "16px",
+              }}
             />
+          </div>
 
-            <div className="card-body">
-              <h5 className="card-title">{item.title}</h5>
+        </div>
 
-              <p className="card-text">
-                Rating: ⭐ {item.rate}
-              </p>
+        {/* Product Information */}
+        <div className="col-md-6">
 
-              <div className="d-flex justify-content-between align-items-center">
-                <button className="btn btn-primary" onClick={()=>addToCart(item)}>
-                  Add To Cart
+          <div className="mb-2">
+            <span className="badge bg-light text-dark">
+              {product.category}
+            </span>
+          </div>
+
+          <h1 className="fw-bold mb-2">
+            {product.name}
+          </h1>
+
+          {/* Brand */}
+          <p className="text-muted mb-2">
+            Brand: <strong>{product.brand}</strong>
+          </p>
+
+          {/* Rating */}
+          <div className="mb-3">
+            <span className="text-warning fs-5">
+              ⭐
+            </span>
+
+            <strong className="ms-2">
+              {product.rate || 0}
+            </strong>
+
+            <span className="text-muted ms-2">
+              / 5
+            </span>
+          </div>
+
+          {/* Price */}
+          <h2 className="text-success fw-bold mb-4">
+            ${Number(product.price).toFixed(2)}
+          </h2>
+
+          {/* Stock */}
+          <div className="mb-4">
+
+            {product.stock > 0 ? (
+              <div className="text-success fw-semibold">
+                ✓ In Stock
+                <span className="text-muted ms-2">
+                  ({product.stock} available)
+                </span>
+              </div>
+            ) : (
+              <div className="text-danger fw-semibold">
+                ✕ Out of Stock
+              </div>
+            )}
+
+          </div>
+
+          {/* Description */}
+          <div className="mb-4">
+
+            <h5 className="fw-bold">
+              Description
+            </h5>
+
+            <p
+              className="text-muted"
+              style={{
+                lineHeight: "1.8",
+              }}
+            >
+              {product.description ||
+                "No description available for this product."}
+            </p>
+
+          </div>
+
+          <hr />
+
+          {/* Quantity */}
+          {product.stock > 0 && (
+            <div className="mb-4">
+
+              <label className="fw-semibold mb-2">
+                Quantity
+              </label>
+
+              <div
+                className="d-flex align-items-center"
+                style={{ width: "150px" }}
+              >
+
+                <button
+                  className="btn btn-outline-secondary"
+                  onClick={decreaseQuantity}
+                >
+                  −
                 </button>
 
-                <h5 className="m-0 text-success">
-                  ${item.price}
-                </h5>
+                <div
+                  className="form-control text-center"
+                  style={{
+                    borderRadius: 0,
+                  }}
+                >
+                  {quantityItem}
+                </div>
+
+                <button
+                  className="btn btn-outline-secondary"
+                  onClick={increaseQuantity}
+                >
+                  +
+                </button>
+
+              </div>
+
+            </div>
+          )}
+
+          {/* Total */}
+          {product.stock > 0 && (
+            <div className="mb-4">
+
+              <span className="text-muted">
+                Total:
+              </span>
+
+              <strong className="fs-4 ms-2">
+                $
+                {(
+                  Number(product.price) *
+                  quantityItem
+                ).toFixed(2)}
+              </strong>
+
+            </div>
+          )}
+
+          {/* Add to Cart */}
+          <button
+            className="btn btn-primary btn-lg w-100"
+            disabled={product.stock <= 0}
+            onClick={addToCart}
+          >
+            {product.stock > 0
+              ? "Add To Cart"
+              : "Out of Stock"}
+          </button>
+
+          {/* Customer information */}
+          <div className="mt-4">
+
+            <div className="d-flex gap-3 mb-3">
+              <span>🚚</span>
+
+              <div>
+                <strong>Fast Delivery</strong>
+                <p className="text-muted mb-0">
+                  Fast and secure delivery to your address.
+                </p>
               </div>
             </div>
+
+            <div className="d-flex gap-3 mb-3">
+              <span>↩️</span>
+
+              <div>
+                <strong>Easy Returns</strong>
+                <p className="text-muted mb-0">
+                  Easy return policy for eligible products.
+                </p>
+              </div>
+            </div>
+
+            <div className="d-flex gap-3">
+              <span>🔒</span>
+
+              <div>
+                <strong>Secure Payment</strong>
+                <p className="text-muted mb-0">
+                  Your payment information is protected.
+                </p>
+              </div>
+            </div>
+
           </div>
-        ))}
+
+        </div>
+
+      </div>
+
     </div>
   );
 }
-const itemData = [
-  {
-    id:1,
-    img: 'https://images.unsplash.com/photo-1551963831-b3b1ca40c98e',
-    title: 'Breakfast',
-    author: '@bkristastucchio',
-    price:1000,
-    rate:4
-  },
-  {
-    id:2,
-    img: 'https://images.unsplash.com/photo-1551782450-a2132b4ba21d',
-    title: 'Burger',
-    author: '@rollelflex_graphy726',
-    price:2000,
-    rate:4.5
-  },
-  {
-    id:3,
-    img: 'https://images.unsplash.com/photo-1522770179533-24471fcdba45',
-    title: 'Camera',
-    author: '@helloimnik',
-    price:1050,
-    rate:3.5
-  },
-  {
-    id:4,
-    img: 'https://images.unsplash.com/photo-1444418776041-9c7e33cc5a9c',
-    title: 'Coffee',
-    author: '@nolanissac',
-    price:500,
-    rate:6.9
-  },
-  {
-    id:5,
-    img: 'https://images.unsplash.com/photo-1533827432537-70133748f5c8',
-    title: 'Hats',
-    author: '@hjrc33',
-    price:900,
-    rate:4.7
-  },
-  {
-    id:12,
-    img: 'https://images.unsplash.com/photo-1558642452-9d2a7deb7f62',
-    title: 'Honey',
-    author: '@arwinneil',
-    price:500,
-    rate:5.3
-  },
-  {
-    id:6,
-    img: 'https://images.unsplash.com/photo-1516802273409-68526ee1bdd6',
-    title: 'Basketball',
-    author: '@tjdragotta',
-    price:450,
-    rate:4.1
-  },
-  {
-    id:7,
-    img: 'https://images.unsplash.com/photo-1518756131217-31eb79b20e8f',
-    title: 'Fern',
-    author: '@katie_wasserman',
-    price:300,
-    rate:4.9
-  },
-  {
-    id:8,
-    img: 'https://images.unsplash.com/photo-1597645587822-e99fa5d45d25',
-    title: 'Mushrooms',
-    author: '@silverdalex',
-    price:1700,
-    rate:4.3,
-  },
-  {
-    id:9,
-    img: 'https://images.unsplash.com/photo-1567306301408-9b74779a11af',
-    title: 'Tomato basil',
-    author: '@shelleypauls',
-    price:700,
-    rate:3.9
-  },
-  {
-    id:10,
-    img: 'https://images.unsplash.com/photo-1471357674240-e1a485acb3e1',
-    title: 'Sea star',
-    author: '@peterlaster',
-    price:200,
-    rate:1.4
-  },
-  {
-    id:11,
-    img: 'https://images.unsplash.com/photo-1589118949245-7d38baf380d6',
-    title: 'Bike',
-    author: '@southside_customs',
-    price:100,
-    rate:4.6
-  },
-];

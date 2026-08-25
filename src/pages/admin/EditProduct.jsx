@@ -45,11 +45,12 @@ getSingleProduct()
   formData.set("description",description);
   formData.set("brand",brand)
 
-const res = await fetch(`http://localhost:7000/products/getSingleProduct/${id}`,{
+for (let [key, value] of formData.entries()) {
+  console.log(key, value);
+}
+const res = await fetch(`http://localhost:7000/products/${id}`,{
   method:"PATCH",
-  headers:{
-    "Content-Type":"application/json"
-  },
+
   body:formData,
 })
 
@@ -299,7 +300,7 @@ console.log("updated product",data)
                   style={{
                     borderRadius: "12px",
                   }}
-                  ref={inputRef || product?.cover}
+                  ref={inputRef}
                   onChange={chooseImageProduct}
                 />
               </div>

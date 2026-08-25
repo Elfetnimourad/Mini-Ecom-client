@@ -99,7 +99,20 @@ export default function ProfileCard() {
             <Typography>{userData?.email}</Typography>
           </Stack>
 
-         
+        {userData?.role === "User" && 
+        (<Stack
+            direction="row"
+            alignItems="center"
+            spacing={2}
+          >
+            <ShoppingBag color="primary" />
+
+            <Typography>
+              Orders: <strong>{orders?.length}</strong>
+            </Typography>
+          </Stack>
+        )
+          }
         </Stack>
 
         <Button

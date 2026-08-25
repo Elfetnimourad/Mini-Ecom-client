@@ -8,8 +8,46 @@ export const ShoppContextProvider = ({ children }) => {
     const[userData,setUserData] = useState();
     const[orders,setOrders] = useState();
     const[loading,setLoading] = useState(true);
+    const [users,setUsers] =  useState();
+      const [products,setProducts] = useState();
+    
 
-
+  const [searchProduct,setSearchProduct] = useState();
+  useEffect(()=>{
+const getAllProducts = async()=>{
+  try{
+const res = await fetch("http://localhost:7000/products/getProducts");
+const data = await res.json();
+setProducts(data);
+setSearchProduct(data)
+console.log("products",data)
+  }catch(error){
+    console.error(error)
+  }
+  
+}
+getAllProducts()
+  },[])
+     useEffect(() => {
+        const getUsers = async () => {
+          try {
+            const res = await fetch("http://localhost:7000/users/admin/getUsers");
+    
+            if (!res.ok) {   
+              throw new Error("Failed to fetch orders");
+            }
+    
+            const data = await res.json();
+    
+            setUsers([...data]);
+          } catch (error) {
+            console.error(error);
+          }
+        };
+    
+        getUsers();
+      }, []);
+ 
     useEffect(() => {
         const getOrders = async () => {
           try {
@@ -57,16 +95,15 @@ export const ShoppContextProvider = ({ children }) => {
   
     getMe();
   }, []);
-
+console.log("products",products)
   const handleAddToCart = (item) => {
-    console.log("HHHH");
-
-    const product = addCart.find((p) => p.id === item.id);
+console.log("item",item)
+    const product = addCart.find((p) => p.id === item._id);
 
      if (product) {
     setAddCart((prevCart) => {
       const updatedCart = prevCart.map((p) =>
-        p.id === item.id
+        p.id === item._id
           ? {
               ...p,
               quantity: p.quantity + 1,
@@ -98,7 +135,7 @@ setAddCart((prevCart) => {
   };
 
   return (
-    <shoppContext.Provider value={{ addCart, orders,loading,setAddCart,userData,handleAddToCart }}>
+    <shoppContext.Provider value={{ addCart, orders,users,loading,setAddCart,userData,handleAddToCart,setSearchProduct,searchProduct,products }}>
       {children}
     </shoppContext.Provider>
   );

@@ -19,7 +19,17 @@ import MoreIcon from '@mui/icons-material/MoreVert';
 import HomeIcon from '@mui/icons-material/Home';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import StorefrontIcon from "@mui/icons-material/Storefront";
+import {
 
+  ListItemIcon,
+  ListItemText,
+  Divider,
+} from "@mui/material";
+import {
+  Person,
+  Settings,
+  Logout,ShoppingBag
+} from "@mui/icons-material";
 import { useNavigate } from 'react-router-dom';
 import { useCart } from '../context/Context';
 const Search = styled('div')(({ theme }) => ({
@@ -64,17 +74,21 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 
 export default function Navbar() {
         let navigate = useNavigate();
-  
+  const {addCart,products,userData,order} = useCart()
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
-const {userData} = useCart();
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
-
+const cartItems = addCart.reduce((quantity,item)=>item.quantity + quantity,0)
   const handleProfileMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
   };
-
+const ordersHandler = ()=>{
+    navigate('/orders-user')
+}
+const settingsHandler = ()=>{
+navigate('/settings')
+}
   const handleMobileMenuClose = () => {
     setMobileMoreAnchorEl(null);
   };
@@ -102,6 +116,9 @@ navigate("/profile")
 
     navigate("/")
   }
+  const handleClose = ()=>{
+    setAnchorEl(null);
+  }
   const cartHandler = ()=>{
         setAnchorEl(null);
 
@@ -115,30 +132,116 @@ const logoutHandler = ()=>{
 }
   const menuId = 'primary-search-account-menu';
   const renderMenu = (
-    <Menu
-      anchorEl={anchorEl}
-      anchorOrigin={{
-        vertical: 'bottom',
-        horizontal: 'right',
-      }}
-      sx={{
-        position:"absolute",
-        zIndex:99999999999
-      }}
-      id={menuId}
-      keepMounted
-      transformOrigin={{
-        vertical: 'top',
-        horizontal: 'right',
-      }}
-      open={isMenuOpen}
-      onClose={handleMenuClose}
-    >
-      <MenuItem onClick={profileHandler}>Profile</MenuItem>
-      <MenuItem onClick={accountHandler}>My account</MenuItem>
-      <MenuItem onClick={logoutHandler}>Logout</MenuItem>
+   <Menu
+  anchorEl={anchorEl}
+  open={Boolean(anchorEl)}
+  onClose={handleClose}
+  PaperProps={{
+    elevation: 3,
+    sx: {
+      mt: 1.5,
+      minWidth: 220,
+      borderRadius: 3,
+      overflow: "hidden",
+      border: "1px solid #e5e7eb",
+    },
+  }}
+>
+  <MenuItem
+    onClick={() => {
+      ordersHandler();
+      handleClose();
+    }}
+    sx={{
+      py: 1.5,
+      px: 2,
+      gap: 1,
+    }}
+  >
+    <ListItemIcon>
+      <ShoppingBag fontSize="small" />
+    </ListItemIcon>
 
-    </Menu>
+    <ListItemText
+      primary="My Orders"
+      primaryTypographyProps={{
+        fontWeight: 600,
+      }}
+    />
+  </MenuItem>
+
+  <MenuItem
+    onClick={() => {
+      profileHandler();
+      handleClose();
+    }}
+    sx={{
+      py: 1.5,
+      px: 2,
+      gap: 1,
+    }}
+  >
+    <ListItemIcon>
+      <Person fontSize="small" />
+    </ListItemIcon>
+
+    <ListItemText
+      primary="Profile"
+      primaryTypographyProps={{
+        fontWeight: 600,
+      }}
+    />
+  </MenuItem>
+
+  <MenuItem
+    onClick={() => {
+      settingsHandler();
+      handleClose();
+    }}
+    sx={{
+      py: 1.5,
+      px: 2,
+      gap: 1,
+    }}
+  >
+    <ListItemIcon>
+      <Settings fontSize="small" />
+    </ListItemIcon>
+
+    <ListItemText
+      primary="Settings"
+      primaryTypographyProps={{
+        fontWeight: 600,
+      }}
+    />
+  </MenuItem>
+
+  <Divider />
+
+  <MenuItem
+    onClick={() => {
+      logoutHandler();
+      handleClose();
+    }}
+    sx={{
+      py: 1.5,
+      px: 2,
+      gap: 1,
+      color: "#dc2626",
+    }}
+  >
+    <ListItemIcon sx={{ color: "#dc2626" }}>
+      <Logout fontSize="small" />
+    </ListItemIcon>
+
+    <ListItemText
+      primary="Logout"
+      primaryTypographyProps={{
+        fontWeight: 600,
+      }}
+    />
+  </MenuItem>
+</Menu>
   );
 
   const mobileMenuId = 'primary-search-account-menu-mobile';
@@ -188,7 +291,9 @@ const logoutHandler = ()=>{
           aria-haspopup="true"
           color="inherit"
         >
+          <Badge badgeContent={order?.length} color="error">
           <AccountCircle />
+          </Badge>
         </IconButton>
         <p>Profile</p>
       </MenuItem>
@@ -250,18 +355,19 @@ const logoutHandler = ()=>{
 </Box>
           <Box sx={{ flexGrow: 1 }} />
           <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
-            <IconButton size="large" aria-label="show 4 new mails" color="inherit">
-              <Badge badgeContent={4} color="error">
-                <HomeIcon onClick={()=>navigate('/')}/>
+            <IconButton size="large" aria-label="show 4 new mails" color="inherit" onClick={()=>navigate('/')}>
+              <Badge badgeContent={products?.length} color="error">
+                <HomeIcon />
               </Badge>
             </IconButton>
             <IconButton
               size="large"
               aria-label="show 17 new notifications"
               color="inherit"
+              onClick={()=>navigate('/cart')}
             >
-              <Badge badgeContent={17} color="error">
-                <ShoppingCartIcon onClick={()=>navigate('/cart')}/>
+              <Badge badgeContent={cartItems} color="error">
+                <ShoppingCartIcon  />
               </Badge>
             </IconButton>
             <IconButton
