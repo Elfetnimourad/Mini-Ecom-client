@@ -10,24 +10,27 @@ export const ShoppContextProvider = ({ children }) => {
     const[loading,setLoading] = useState(true);
     const [users,setUsers] =  useState();
       const [products,setProducts] = useState();
-    
+    const [page, setPage] = useState(1);
+const [searchProduct, setSearchProduct] = useState([]);
+const limit = 12;
 
-  const [searchProduct,setSearchProduct] = useState();
   useEffect(()=>{
 const getAllProducts = async()=>{
   try{
-const res = await fetch("http://localhost:7000/products/getProducts");
+const res = await fetch(`http://localhost:7000/products/getProducts?page=${page}&limit=${limit}`);
 const data = await res.json();
 setProducts(data);
 setSearchProduct(data)
 console.log("products",data)
+console.log("CURRENT PAGE:", page);
+console.log("URL:", `http://localhost:7000/products/getProducts?page=${page}&limit=12`);
   }catch(error){
     console.error(error)
   }
   
 }
 getAllProducts()
-  },[])
+  },[page])
      useEffect(() => {
         const getUsers = async () => {
           try {
@@ -135,7 +138,7 @@ setAddCart((prevCart) => {
   };
 
   return (
-    <shoppContext.Provider value={{ addCart, orders,users,loading,setAddCart,userData,handleAddToCart,setSearchProduct,searchProduct,products }}>
+    <shoppContext.Provider value={{ addCart,page,products,searchProduct,setSearchProduct ,setPage,orders,users,loading,setAddCart,userData,handleAddToCart }}>
       {children}
     </shoppContext.Provider>
   );

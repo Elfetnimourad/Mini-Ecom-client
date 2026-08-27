@@ -17,20 +17,13 @@ import { useCart } from "../../context/Context";
 
 const Checkout = () => {
   const { addCart,userData } = useCart();
-  // id: item.id,
-  //       productImg: item.img,
-  //       productTitle: item.title,
-  //       productPrice: item.price,
-  //       quantity: 1,
-  //       total: item.price,
-
-  // Replace this with your logged-in user
   const user = {
-    name: "Morad Elfetni",
-    email: "morad@email.com",
+    name: userData?.username,
+    email: userData?.email,
     phone: "+213 555 555 555",
     address: "Batna, Algeria",
   };
+  console.log("userData",userData)
 
   const totalPrice = addCart.reduce(
     (total, item) => total + item.total,
@@ -59,11 +52,11 @@ try{
       "Content-Type":"application/json"
     },
     body:JSON.stringify({
-      user:userData._id,
-      items:addCart.map(item => ({
-    product: item.id,
-    quantity: item.quantity,
-    price: item.productPrice
+      user:userData?._id,
+      items:addCart?.map(item => ({
+    product: item?.id,
+    quantity: item?.quantity,
+    price: item?.productPrice
   })),
       totalPrice
     })

@@ -45,6 +45,7 @@ export default function AdminOrders() {
   const [statusFilter, setStatusFilter] = useState("all");
  
 const{orders,loading} = useCart();
+console.log("orders",orders)
   // =========================
   // GET ORDERS
   // =========================
@@ -520,7 +521,7 @@ const{orders,loading} = useCart();
 
             <TableBody>
 
-              {filteredOrders.length === 0 ? (
+              {filteredOrders?.length === 0 ? (
                 <TableRow>
                   <TableCell
                     colSpan={7}

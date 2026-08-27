@@ -17,19 +17,21 @@ import Divider from "@mui/material/Divider";
 import ListSubheader from "@mui/material/ListSubheader";
 import { useNavigate, useParams } from 'react-router-dom';
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import Pagination from "@mui/material/Pagination";
+import Stack from "@mui/material/Stack";
 import IconButton from "@mui/material/IconButton";
 import { useState,useEffect } from 'react';
 import { useCart } from '../../context/Context';
 import Profile from "../../components/Profile"
 export default function Home(){
- const { addCart, handleAddToCart } = useCart();
+ const { addCart, handleAddToCart,page, setPage,limit,products,searchProduct,setSearchProduct  } = useCart();
 
 const [anchorEl, setAnchorEl] = useState(null);
 const [data, setData] = useState(null);
 
-const [products, setProducts] = useState([]);
-const [searchProduct, setSearchProduct] = useState([]);
 
+
+console.log("page",page)
 const navigate = useNavigate();
 
 const open = Boolean(anchorEl);
@@ -38,27 +40,27 @@ const open = Boolean(anchorEl);
 // ===============================
 // GET ALL PRODUCTS
 // ===============================
-useEffect(() => {
-  const getAllProducts = async () => {
-    try {
-      const res = await fetch(
-        "http://localhost:7000/products/getProducts"
-      );
+// useEffect(() => {
+//   const getAllProducts = async () => {
+//     try {
+//       const res = await fetch(
+//         "http://localhost:7000/products/getProducts"
+//       );
 
-      const data = await res.json();
+//       const data = await res.json();
 
-      setProducts(data);
-      setSearchProduct(data);
+//       setProducts(data);
+//       setSearchProduct(data);
 
-      console.log("products", data);
+//       console.log("products", data);
 
-    } catch (error) {
-      console.error(error);
-    }
-  };
+//     } catch (error) {
+//       console.error(error);
+//     }
+//   };
 
-  getAllProducts();
-}, []);
+//   getAllProducts();
+// }, [page]);
 
 
 // ===============================
@@ -403,6 +405,20 @@ return (
     </ImageListItem>
   ))}
 </ImageList>
+  {/* Pagination */}
+  <Stack
+       spacing={2}
+      alignItems="center"
+      sx={{ mt: 4, mb: 4 }}
+    >
+      <Pagination
+        count={3}
+        page={page}
+        onChange={(event, value) => setPage(value)}
+        color="primary"
+        size="large"
+      />
+    </Stack>
     </Box>
   );
 }
