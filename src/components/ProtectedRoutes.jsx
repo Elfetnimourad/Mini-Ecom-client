@@ -1,11 +1,12 @@
 import { Navigate, Outlet } from "react-router-dom";
+import { useCart } from "../context/Context";
 
 export default function ProtectedRoute({ allowedRoles }) {
   // Example:
-  // const { user } = useAuth();
-  // user = { role: "admin" }
+  const { userData } = useCart();
+  
 
-  const token = localStorage.getItem("token");
+  const token = localStorage.getItem("token") || sessionStorage.getItem("token");
 
   const user = JSON.parse(localStorage.getItem("user"));
 
@@ -15,8 +16,8 @@ export default function ProtectedRoute({ allowedRoles }) {
   }
 
   // User role is not allowed
-  if (!allowedRoles.includes(user?.role)) {
-    return <Navigate to="/" replace />;
+  if (!allowedRoles.includes(userData?.role)) {
+    return <Navigate to="/admin" replace />;
   }
 
   // User is authorized

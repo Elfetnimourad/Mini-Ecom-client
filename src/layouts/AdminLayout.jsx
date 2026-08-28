@@ -52,7 +52,10 @@ export default function AdminLayout() {
   const navigate = useNavigate();
   const{orders,userData,loading} = useCart();
   
+  
 const logoutHandler = ()=>{
+localStorage.removeItem("token");
+sessionStorage.removeItem("token")
 navigate("/login")
 }
   return (

@@ -13,11 +13,18 @@ export const ShoppContextProvider = ({ children }) => {
     const [page, setPage] = useState(1);
 const [searchProduct, setSearchProduct] = useState([]);
 const limit = 12;
-
+const role = userData?.role;
   useEffect(()=>{
 const getAllProducts = async()=>{
+  const token = localStorage.getItem("token") || sessionStorage.getItem("token");
+  console.log(userData?.role)
   try{
-const res = await fetch(`http://localhost:7000/products/getProducts?page=${page}&limit=${limit}`);
+const res = await fetch(`http://localhost:7000/products/getProducts?page=${(role === "ADMIN") ? 1 : page}&limit=${(role === "ADMIN") ? 1000 : limit}`,{
+  method:"GET",
+  headers:{
+    "Authorization":`Bearer ${token}`
+  }
+});
 const data = await res.json();
 setProducts(data);
 setSearchProduct(data)
@@ -30,7 +37,7 @@ console.log("URL:", `http://localhost:7000/products/getProducts?page=${page}&lim
   
 }
 getAllProducts()
-  },[page])
+  },[page,role])
      useEffect(() => {
         const getUsers = async () => {
           try {

@@ -38,32 +38,6 @@ const open = Boolean(anchorEl);
 
 
 // ===============================
-// GET ALL PRODUCTS
-// ===============================
-// useEffect(() => {
-//   const getAllProducts = async () => {
-//     try {
-//       const res = await fetch(
-//         "http://localhost:7000/products/getProducts"
-//       );
-
-//       const data = await res.json();
-
-//       setProducts(data);
-//       setSearchProduct(data);
-
-//       console.log("products", data);
-
-//     } catch (error) {
-//       console.error(error);
-//     }
-//   };
-
-//   getAllProducts();
-// }, [page]);
-
-
-// ===============================
 // GET CURRENT USER
 // ===============================
 useEffect(() => {
@@ -120,7 +94,7 @@ const searchProductHandler = (e) => {
     return;
   }
 
-  const filtered = products.filter((product) =>
+  const filtered = products?.filter((product) =>
     product.name?.toLowerCase().includes(value)
   );
 
@@ -141,7 +115,7 @@ const getAllProducts = () => {
 // PRICE: HIGH → LOW
 // ===============================
 const getHighPriceHandler = () => {
-  const sorted = [...searchProduct].sort(
+  const sorted = [...searchProduct]?.sort(
     (a, b) => Number(b.price) - Number(a.price)
   );
 
@@ -154,7 +128,7 @@ const getHighPriceHandler = () => {
 // PRICE: LOW → HIGH
 // ===============================
 const getLowPriceHandler = () => {
-  const sorted = [...searchProduct].sort(
+  const sorted = [...searchProduct]?.sort(
     (a, b) => Number(a.price) - Number(b.price)
   );
 
@@ -167,7 +141,7 @@ const getLowPriceHandler = () => {
 // HIGHEST RATING
 // ===============================
 const getHighestRatingProducts = () => {
-  const sorted = [...searchProduct].sort(
+  const sorted = [...searchProduct]?.sort(
     (a, b) => Number(b.rate) - Number(a.rate)
   );
 
@@ -180,7 +154,7 @@ const getHighestRatingProducts = () => {
 // NEWEST PRODUCTS
 // ===============================
 const getNewestProducts = () => {
-  const sorted = [...searchProduct].sort(
+  const sorted = [...searchProduct]?.sort(
     (a, b) => new Date(b.timestamp) - new Date(a.timestamp)
   );
 
@@ -193,7 +167,7 @@ console.log("searchProduct",searchProduct)
 // CATEGORY
 // ===============================
 const getCategoryProduct = (type) => {
-  const filtered = products.filter(
+  const filtered = products?.filter(
     (product) => product.category === type
   );
 

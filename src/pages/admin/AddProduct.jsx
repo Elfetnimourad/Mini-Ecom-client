@@ -1,5 +1,5 @@
 import React, { useRef, useState } from "react";
-// import "../styles/AdminPanel.css";
+
 
 export default function AddProduct() {
   const imageRef = useRef();
@@ -37,7 +37,8 @@ const response = await fetch("http://localhost:7000/products/addProduct",{
 
 })
 const data = await response.json();
-console.log("data",data)
+console.log("data",data);
+
   }catch(error){
     console.error(error);
   }

@@ -62,7 +62,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 export default function Products() {
   const navigate = useNavigate();
   const [title,setTitle] = useState("");
-const {setSearchProduct,searchProduct,products} = useCart();
+const {setSearchProduct,searchProduct,products,userData} = useCart();
 
 
   const editHandel = (product)=>{ 
@@ -72,6 +72,10 @@ const {setSearchProduct,searchProduct,products} = useCart();
     try{
       const res = await fetch(`http://localhost:7000/products/${product._id}`,{
         method:"DELETE",
+         headers: {
+    "Content-Type": "application/json",
+  },          
+        body:JSON.stringify({userData}),
       })
       const data = await res.json();
       console.log(data)
