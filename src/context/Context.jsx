@@ -6,10 +6,10 @@ const shoppContext = createContext(null);
 export const ShoppContextProvider = ({ children }) => {
   const [addCart, setAddCart] = useState([]);
     const[userData,setUserData] = useState();
-    const[orders,setOrders] = useState();
+    const[orders,setOrders] = useState([]);
     const[loading,setLoading] = useState(true);
-    const [users,setUsers] =  useState();
-      const [products,setProducts] = useState();
+    const [users,setUsers] =  useState([]);
+      const [products,setProducts] = useState([]);
     const [page, setPage] = useState(1);
 const [searchProduct, setSearchProduct] = useState([]);
 const limit = 12;
@@ -18,20 +18,28 @@ const role = userData?.role;
 const getAllProducts = async()=>{
   const token = localStorage.getItem("token") || sessionStorage.getItem("token");
   try{
-const res = await fetch(`http://localhost:7000/products/getProducts?page=${(role === "ADMIN") ? 1 : page}&limit=${(role === "ADMIN") ? 1000 : limit}`,{
+const res = await fetch(`https://mini-ecom-server.onrender.com/products/getProducts?page=${(role === "ADMIN") ? 1 : page}&limit=${(role === "ADMIN") ? 1000 : limit}`,{
   method:"GET",
   headers:{
     "Authorization":`Bearer ${token}`
   }
 });
 const data = await res.json();
+if (!res.ok || !Array.isArray(data)) {
+  console.error("Failed to fetch products:", data);
+  setProducts([]);
+  setSearchProduct([]);
+  return;
+}
 setProducts(data);
 setSearchProduct(data)
 console.log("products",data)
 console.log("CURRENT PAGE:", page);
-console.log("URL:", `http://localhost:7000/products/getProducts?page=${page}&limit=12`);
+console.log("URL:", `https://mini-ecom-server.onrender.com/products/getProducts?page=${page}&limit=12`);
   }catch(error){
     console.error(error)
+    setProducts([]);
+    setSearchProduct([]);
   }
   
 }
@@ -40,42 +48,44 @@ getAllProducts()
      useEffect(() => {
         const getUsers = async () => {
           try {
-            const res = await fetch("http://localhost:7000/users/admin/getUsers");
+            const res = await fetch("https://mini-ecom-server.onrender.com/users/admin/getUsers");
     
             if (!res.ok) {   
               throw new Error("Failed to fetch orders");
             }
     
             const data = await res.json();
-    
-            setUsers([...data]);
+
+            setUsers(Array.isArray(data) ? data : []);
           } catch (error) {
             console.error(error);
+            setUsers([]);
           }
         };
-    
+
         getUsers();
       }, []);
  
     useEffect(() => {
         const getOrders = async () => {
           try {
-            const res = await fetch("http://localhost:7000/orders/getOrders");
+            const res = await fetch("https://mini-ecom-server.onrender.com/orders/getOrders");
     
             if (!res.ok) {   
               throw new Error("Failed to fetch orders");
             }
     
             const data = await res.json();
-    
-            setOrders([...data]);
+
+            setOrders(Array.isArray(data) ? data : []);
           } catch (error) {
             console.error(error);
+            setOrders([]);
           } finally {
             setLoading(false);
           }
         };
-    
+
         getOrders();
       }, []);
   
@@ -89,7 +99,7 @@ getAllProducts()
         if (!token) return;
   console.log("token",token)
         const res = await fetch(
-    `http://localhost:7000/users/getMe?token=${encodeURIComponent(token)}`
+    `https://mini-ecom-server.onrender.com/users/getMe?token=${encodeURIComponent(token)}`
   );
   
   

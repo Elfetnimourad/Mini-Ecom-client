@@ -14,7 +14,7 @@ const {addCart,handleAddToCart,decrementQuantity,incrementQuantity} = useCart();
     const getSingleProduct = async () => {
       try {
         const res = await fetch(
-          `http://localhost:7000/products/getSingleProduct/${id}`
+          `https://mini-ecom-server.onrender.com/products/getSingleProduct/${id}`
         );
 
         const data = await res.json();

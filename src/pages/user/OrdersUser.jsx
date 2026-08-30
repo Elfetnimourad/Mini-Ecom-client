@@ -13,7 +13,7 @@ const {userData} = useCart()
       try {
         
         const res = await fetch(
-          `http://localhost:7000/orders/getSingleOrder/${userData?._id}`
+          `https://mini-ecom-server.onrender.com/orders/getSingleOrder/${userData?._id}`
         );
 
         const data = await res.json();

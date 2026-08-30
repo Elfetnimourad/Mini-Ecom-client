@@ -5,7 +5,7 @@ export default function ForgotPassword() {
 const[email,setEmail] = useState("")
 const resetLink = async()=>{
   try{
-const response = await fetch("http://localhost:7000/users/forgot-password",{
+const response = await fetch("https://mini-ecom-server.onrender.com/users/forgot-password",{
     method:"POST",
     headers: {
     "Content-Type": "application/json",

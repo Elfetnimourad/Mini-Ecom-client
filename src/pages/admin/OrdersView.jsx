@@ -30,7 +30,7 @@ export default function OrdersView() {
     const getOrder = async () => {
       try {
         const res = await fetch(
-          `http://localhost:7000/orders/getSingleOrder/${orderId}`
+          `https://mini-ecom-server.onrender.com/orders/getSingleOrder/${orderId}`
         );
 
         const data = await res.json();

@@ -70,7 +70,7 @@ const {setSearchProduct,searchProduct,products,userData} = useCart();
   }
   const deleteHandel = async(product)=>{
     try{
-      const res = await fetch(`http://localhost:7000/products/${product._id}`,{
+      const res = await fetch(`https://mini-ecom-server.onrender.com/products/${product._id}`,{
         method:"DELETE",
          headers: {
     "Content-Type": "application/json",

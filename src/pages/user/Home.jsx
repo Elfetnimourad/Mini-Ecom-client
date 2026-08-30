@@ -51,7 +51,7 @@ useEffect(() => {
       console.log("token", token);
 
       const res = await fetch(
-        `http://localhost:7000/users/getMe?token=${encodeURIComponent(token)}`
+        `https://mini-ecom-server.onrender.com/users/getMe?token=${encodeURIComponent(token)}`
       );
 
       const data = await res.json();
