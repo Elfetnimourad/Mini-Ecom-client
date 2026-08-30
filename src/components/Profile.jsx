@@ -26,7 +26,7 @@ export default function ProfileCard() {
   //   orders: 12,
   //   avatar: "https://i.pravatar.cc/300?img=12",
   // };'
-  const {userData,orders,addCart} = useCart();
+  const {userData,orders} = useCart();
 
   return (
     <div className="d-flex justify-content-center w-100">

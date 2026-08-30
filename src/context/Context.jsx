@@ -17,7 +17,6 @@ const role = userData?.role;
   useEffect(()=>{
 const getAllProducts = async()=>{
   const token = localStorage.getItem("token") || sessionStorage.getItem("token");
-  console.log(userData?.role)
   try{
 const res = await fetch(`http://localhost:7000/products/getProducts?page=${(role === "ADMIN") ? 1 : page}&limit=${(role === "ADMIN") ? 1000 : limit}`,{
   method:"GET",
@@ -97,7 +96,6 @@ getAllProducts()
         const data = await res.json();
   
         setUserData(data);
-        console.log(userData);
       } catch (error) {
         console.error(error);
       }

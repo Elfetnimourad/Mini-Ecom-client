@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useMemo, useState } from "react";
 import {
   Avatar,
   Box,
@@ -28,7 +28,6 @@ import {
   AttachMoney,
   CheckCircle,
   HourglassEmpty,
-  LocalShipping,
   Search,
   ShoppingBag,
   Visibility,

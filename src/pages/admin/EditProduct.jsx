@@ -26,14 +26,13 @@ const getSingleProduct = async()=>{
 const res = await fetch(`http://localhost:7000/products/getSingleProduct/${id}`)
 const data = await res.json();
 setProduct(data);
-console.log("product",product)
 console.log("product",data)
   }catch(error){
     console.error(error)
   }
 }
 getSingleProduct()
-  },[])
+  },[id])
   const saveEditing = async()=>{
      try{
      formData.set("price",price);

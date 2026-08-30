@@ -49,7 +49,7 @@ console.log(({
 
     const makePayment = async()=>{
       try{
-        const stripe = await loadStripe("pk_test_51U9k1qCZkItYrotpTv10dg9NCeK7s19IRlGJJ5Q9sZ4emTojTS6Hwbwo3znhUzbd4ppkxTnMpAn9hyfG0gWqLsJb00Q8TfJbJs")
+        await loadStripe("pk_test_51U9k1qCZkItYrotpTv10dg9NCeK7s19IRlGJJ5Q9sZ4emTojTS6Hwbwo3znhUzbd4ppkxTnMpAn9hyfG0gWqLsJb00Q8TfJbJs")
    const res = await fetch(
       "http://localhost:7000/orders/create-checkout-session",
       {

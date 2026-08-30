@@ -10,25 +10,23 @@ import CategoryIcon from "@mui/icons-material/Category";
 import SportsBasketballIcon from "@mui/icons-material/SportsBasketball";
 import ComputerIcon from "@mui/icons-material/Computer";
 import CheckroomIcon from "@mui/icons-material/Checkroom";
-import HomeIcon from "@mui/icons-material/Home";
 import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import SortIcon from "@mui/icons-material/Sort";
 import Divider from "@mui/material/Divider";
 
 import ListSubheader from "@mui/material/ListSubheader";
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
 import IconButton from "@mui/material/IconButton";
 import { useState,useEffect } from 'react';
 import { useCart } from '../../context/Context';
-import Profile from "../../components/Profile"
 export default function Home(){
- const { addCart, handleAddToCart,page, setPage,limit,products,searchProduct,setSearchProduct  } = useCart();
+ const { handleAddToCart,page, setPage,products,searchProduct,setSearchProduct  } = useCart();
 
 const [anchorEl, setAnchorEl] = useState(null);
-const [data, setData] = useState(null);
+const [, setData] = useState(null);
 
 
 
