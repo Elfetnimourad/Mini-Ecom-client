@@ -18,7 +18,7 @@ export default function ResetPassword() {
 
     try {
       const res = await fetch(
-        "http://localhost:7000/users/reset-password",
+        "https://mini-ecom-server.onrender.com/users/reset-password",
         {
           method: "POST",
           headers: {

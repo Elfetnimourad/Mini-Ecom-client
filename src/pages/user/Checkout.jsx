@@ -51,7 +51,7 @@ console.log(({
       try{
         await loadStripe("pk_test_51U9k1qCZkItYrotpTv10dg9NCeK7s19IRlGJJ5Q9sZ4emTojTS6Hwbwo3znhUzbd4ppkxTnMpAn9hyfG0gWqLsJb00Q8TfJbJs")
    const res = await fetch(
-      "http://localhost:7000/orders/create-checkout-session",
+      "https://mini-ecom-server.onrender.com/orders/create-checkout-session",
       {
         method: "POST",
         headers: {
@@ -81,7 +81,7 @@ console.log(({
   const handlePlaceOrder = async() => {
     makePayment()
 try{
-   const response =await fetch("http://localhost:7000/orders/createOrder",{
+   const response =await fetch("https://mini-ecom-server.onrender.com/orders/createOrder",{
     method:"POST",
     headers:{
       "Content-Type":"application/json"

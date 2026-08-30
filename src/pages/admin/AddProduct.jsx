@@ -30,7 +30,7 @@ for (let [key, value] of formData.entries()) {
   console.log(key, value);
 }
   try{
-const response = await fetch("http://localhost:7000/products/addProduct",{
+const response = await fetch("https://mini-ecom-server.onrender.com/products/addProduct",{
   method:"POST",
 
   body:formData,

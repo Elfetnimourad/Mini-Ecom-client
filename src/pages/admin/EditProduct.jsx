@@ -23,7 +23,7 @@ export default function EditProduct() {
   useEffect(()=>{
 const getSingleProduct = async()=>{
   try{
-const res = await fetch(`http://localhost:7000/products/getSingleProduct/${id}`)
+const res = await fetch(`https://mini-ecom-server.onrender.com/products/getSingleProduct/${id}`)
 const data = await res.json();
 setProduct(data);
 console.log("product",data)
@@ -47,7 +47,7 @@ getSingleProduct()
 for (let [key, value] of formData.entries()) {
   console.log(key, value);
 }
-const res = await fetch(`http://localhost:7000/products/${id}`,{
+const res = await fetch(`https://mini-ecom-server.onrender.com/products/${id}`,{
   method:"PATCH",
 
   body:formData,

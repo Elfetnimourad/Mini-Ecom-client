@@ -11,7 +11,7 @@ const navigate = useNavigate()
     const login = async(e)=>{
       e.preventDefault();
       try{
-        const response = await fetch("http://localhost:7000/users/login",{
+        const response = await fetch("https://mini-ecom-server.onrender.com/users/login",{
           method:"POST",
           headers:{
             "Content-Type":"application/json",
