@@ -3,7 +3,7 @@ import { useCart } from "../../context/Context";
 import { useNavigate } from "react-router-dom";
 
 export default function Cart() {
-  const {addCart,setAddCart,decrementQuantity,incrementQuantity} = useCart();
+  const {addCart,decrementQuantity,incrementQuantity} = useCart();
   const navigate = useNavigate();
  
   console.log("addCart",addCart);

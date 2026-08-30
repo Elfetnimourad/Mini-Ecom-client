@@ -13,9 +13,7 @@ import {
 import {
   Add,
   Remove,
-  DeleteOutline,
 } from "@mui/icons-material";
-import { useCart } from "../context/Context";
 
 export default function CartItem({
   item = {
@@ -28,7 +26,6 @@ export default function CartItem({
   },
 }) {
   const total = item.price * item.quantity;
-const {addCart} = useCart();
   return (
     <Card
       sx={{

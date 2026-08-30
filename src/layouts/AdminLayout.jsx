@@ -50,7 +50,7 @@ const menuItems = [
 export default function AdminLayout() {
   const location = useLocation();
   const navigate = useNavigate();
-  const{orders,userData,loading} = useCart();
+  const{orders,userData} = useCart();
   
   
 const logoutHandler = ()=>{
