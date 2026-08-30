@@ -31,6 +31,8 @@ import Orders from './pages/admin/Orders';
 import OrdersView from './pages/admin/OrdersView';
 import OrdersUser from './pages/user/OrdersUser';
 import Settings from './pages/user/Settings';
+import PaymentSuccess from './pages/user/PaymentSuccess';
+import PaymentCancel from './pages/user/PaymentCancel';
 
 function App() {
   return (
@@ -41,19 +43,19 @@ function App() {
         {/* ================= USER ================= 
         */}
         <Route element={<UserLayout />}>
-          <Route path="/" element={<Home />} />
-          <Route path="/product/:id" element={<ProductDetails />} />
-          <Route path="/cart" element={<Cart />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<SignUp />} />
-          <Route path="/profile" element={<ProfileCard />} />
-          <Route path="/checkout" element={<Checkout />} />
-          <Route path="/terms" element={<TermsConditions />} />
-          <Route path="/orders-user" element={<OrdersUser />} />
-          <Route path="/settings" element={<Settings />} />
-
-
-          <Route
+           <Route path="/" element={<Home />} />
+           <Route path="/product/:id" element={<ProductDetails />} />
+           <Route path="/cart" element={<Cart />} />
+           <Route path="/login" element={<Login />} />
+           <Route path="/register" element={<SignUp />} />
+           <Route path="/profile" element={<ProfileCard />} />
+           <Route path="/checkout" element={<Checkout />} />
+           <Route path="/terms" element={<TermsConditions />} />
+           <Route path="/orders-user" element={<OrdersUser />} />
+           <Route path="/settings" element={<Settings />} />
+           <Route path="/success" element={<PaymentSuccess />} />
+           <Route path="/cancel" element={<PaymentCancel />} />
+        <Route
   path="/reset-password/:token"
   element={<ResetPassword />}
 />
@@ -69,19 +71,15 @@ function App() {
           <Route element={<AdminLayout />}>
             <Route path="/admin" element={<Dashboard />} />
             <Route path="/admin/products" element={<Products />} />
-          <Route path="/admin/products/profile" element={<ProfileCard />} />
-          <Route path="/admin/orders" element={<Orders />} />
-
+            <Route path="/admin/products/profile" element={<ProfileCard />} />
+            <Route path="/admin/orders" element={<Orders />} />
             <Route path="/admin/products/add" element={<AddProduct />} />
             <Route path="/admin/orders/ordersView/:orderId" element={<OrdersView />} />
-
             <Route
               path="/admin/products/edit/:id"
               element={<EditProduct />}
             />
           </Route>
-            {/* <Route path="/admin/notification" element={<Dashboard />} /> */}
-
         </Route>
 
       </Routes>

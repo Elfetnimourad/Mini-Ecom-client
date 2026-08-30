@@ -1,37 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useCart } from "../../context/Context";
 
 export default function Settings() {
     const {userData} = useCart()
-  const [user, setUser] = useState(null);
   const [notifications, setNotifications] = useState(true);
   const [currency, setCurrency] = useState("USD");
 const [showPassword, setShowPassword] = useState(false);
-//   useEffect(() => {
-//     const getMe = async () => {
-//       try {
-//         const token =
-//           sessionStorage.getItem("token") ||
-//           localStorage.getItem("token");
-
-//         if (!token) return;
-
-//         const res = await fetch(
-//           `http://localhost:7000/users/getMe?token=${encodeURIComponent(
-//             token
-//           )}`
-//         );
-
-//         const data = await res.json();
-
-//         setUser(data);
-//       } catch (error) {
-//         console.error(error);
-//       }
-//     };
-
-//     getMe();
-//   }, []);
 
   return (
     <div

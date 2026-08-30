@@ -28,7 +28,7 @@ const {userData} = useCart()
     };
 
     getMyOrders();
-  }, []);
+  }, [userData?._id]);
 
   const getStatusClass = (status) => {
     switch (status) {

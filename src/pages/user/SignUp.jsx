@@ -28,6 +28,7 @@ export default function SignUp() {
       body:formData
      })
     const data = await res.json()
+    console.log("data",data)
     if(res.ok){
       alert(`Hi ${username},Go Shopping Here`)
       navigate("/login")
@@ -38,7 +39,6 @@ export default function SignUp() {
      console.error(error)
     }
   }
-console.log("profile",profilePic)
   return (
     <div
       className="d-flex justify-content-center align-items-center"

@@ -14,6 +14,8 @@ import LocalShippingIcon from "@mui/icons-material/LocalShipping";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import PaymentIcon from "@mui/icons-material/Payment";
 import { useCart } from "../../context/Context";
+import {loadStripe} from '@stripe/stripe-js';
+
 
 const Checkout = () => {
   const { addCart,userData } = useCart();
@@ -44,7 +46,40 @@ console.log(({
   })),
       totalPrice,
     }))
+
+    const makePayment = async()=>{
+      try{
+        const stripe = await loadStripe("pk_test_51U9k1qCZkItYrotpTv10dg9NCeK7s19IRlGJJ5Q9sZ4emTojTS6Hwbwo3znhUzbd4ppkxTnMpAn9hyfG0gWqLsJb00Q8TfJbJs")
+   const res = await fetch(
+      "http://localhost:7000/orders/create-checkout-session",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          items: addCart.map(item => ({
+            id: item.id,
+            image: item.productImg,
+            name: item.productTitle,
+            price: item.productPrice,
+            quantity: item.quantity,
+            total: item.price,
+            category: item.category
+          })),
+        }),
+      }
+    );
+
+    const session = await res.json();
+
+    window.location.href = session.url;
+      }catch(error){
+        console.error(error)
+      }
+    }
   const handlePlaceOrder = async() => {
+    makePayment()
 try{
    const response =await fetch("http://localhost:7000/orders/createOrder",{
     method:"POST",
@@ -64,13 +99,10 @@ try{
    const data = await response.json()
 
 console.log("data",data)
-
+ 
   }catch(error){
 console.log(error)
 }
-
-
-    // alert("Order placed successfully!");
   };
 console.log("userData",userData)
   return (

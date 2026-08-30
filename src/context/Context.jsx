@@ -133,6 +133,7 @@ console.log("item",item)
         productPrice: item.price,
         quantity: 1,
         total: item.price,
+        category:item.category,
       };
 
 setAddCart((prevCart) => {
@@ -143,9 +144,37 @@ setAddCart((prevCart) => {
 
     console.log("addCart", addCart);
   };
+ const decrementQuantity = (item)=>{
+setAddCart((prevCart)=>{
+const updCart = addCart.map(p=>
+  p.id === item.id
+  ? {
+    ...p,
+    quantity:p.quantity - 1,
+    total:(p.quantity - 1) * p.productPrice,
+  }
+  : p
+)
+return updCart;
+})
+console.log("updateCart",addCart)
+  }
+  const incrementQuantity = (item)=>{
+    setAddCart((prevCart)=>{
+      const incCart = prevCart.map(p=>
+        p.id === item.id
+        ?{
+          ...p,
+          quantity:p.quantity +1,
+          total:(p.quantity + 1) * p.productPrice,
+        }:p
+      )
+      return incCart
+    })
 
+  }
   return (
-    <shoppContext.Provider value={{ addCart,page,products,searchProduct,setSearchProduct ,setPage,orders,users,loading,setAddCart,userData,handleAddToCart }}>
+    <shoppContext.Provider value={{ addCart,page,products,decrementQuantity,incrementQuantity,searchProduct,setSearchProduct ,setPage,orders,users,loading,setAddCart,userData,handleAddToCart }}>
       {children}
     </shoppContext.Provider>
   );

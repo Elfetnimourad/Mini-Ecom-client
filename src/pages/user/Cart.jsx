@@ -3,38 +3,10 @@ import { useCart } from "../../context/Context";
 import { useNavigate } from "react-router-dom";
 
 export default function Cart() {
-  const {addCart,setAddCart} = useCart();
+  const {addCart,setAddCart,decrementQuantity,incrementQuantity} = useCart();
   const navigate = useNavigate();
-  const decrementQuantity = (item)=>{
-setAddCart((prevCart)=>{
-const updCart = addCart.map(p=>
-  p.id === item.id
-  ? {
-    ...p,
-    quantity:p.quantity - 1,
-    total:(p.quantity - 1) * p.productPrice,
-  }
-  : p
-)
-return updCart;
-})
-console.log("updateCart",addCart)
-  }
-  const incrementQuantity = (item)=>{
-    setAddCart((prevCart)=>{
-      const incCart = prevCart.map(p=>
-        p.id === item.id
-        ?{
-          ...p,
-          quantity:p.quantity +1,
-          total:(p.quantity + 1) * p.productPrice,
-        }:p
-      )
-      return incCart
-    })
-
-  }
-  console.log("addCart",addCart)
+ 
+  console.log("addCart",addCart);
   return (
     <div
       className="d-flex justify-content-center align-items-center"

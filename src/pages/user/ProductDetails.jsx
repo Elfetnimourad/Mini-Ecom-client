@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { useCart } from "../../context/Context";
+
 
 export default function ProductDetails() {
-  const [quantityItem, setQuantityItem] = useState(1);
+  
   const [product, setProduct] = useState(null);
 
+const {addCart,handleAddToCart,decrementQuantity,incrementQuantity} = useCart();
   const { id } = useParams();
 
   useEffect(() => {
@@ -16,6 +19,7 @@ export default function ProductDetails() {
 
         const data = await res.json();
         setProduct(data);
+        console.log("product", data);
       } catch (error) {
         console.error(error);
       }
@@ -24,30 +28,8 @@ export default function ProductDetails() {
     getSingleProduct();
   }, [id]);
 
-  const increaseQuantity = () => {
-    if (quantityItem < product?.stock) {
-      setQuantityItem((q) => q + 1);
-    }
-  };
-
-  const decreaseQuantity = () => {
-    if (quantityItem > 1) {
-      setQuantityItem((q) => q - 1);
-    }
-  };
-
-  const addToCart = () => {
-    const addedProduct = {
-      product: product._id,
-      productImg: product.cover,
-      productName: product.name,
-      productPrice: product.price,
-      quantity: quantityItem,
-      total: product.price * quantityItem,
-    };
-
-    console.log("Product added:", addedProduct);
-  };
+const item = addCart?.find(e=>e.id === product._id);
+console.log("item",item)
 
   if (!product) {
     return (
@@ -176,7 +158,7 @@ export default function ProductDetails() {
 
                 <button
                   className="btn btn-outline-secondary"
-                  onClick={decreaseQuantity}
+                  onClick={() => decrementQuantity(item)}
                 >
                   −
                 </button>
@@ -187,12 +169,12 @@ export default function ProductDetails() {
                     borderRadius: 0,
                   }}
                 >
-                  {quantityItem}
+                  {item?.quantity || 1}
                 </div>
 
                 <button
                   className="btn btn-outline-secondary"
-                  onClick={increaseQuantity}
+                  onClick={() => incrementQuantity(item)}
                 >
                   +
                 </button>
@@ -214,7 +196,7 @@ export default function ProductDetails() {
                 $
                 {(
                   Number(product.price) *
-                  quantityItem
+                  (item?.quantity || 1)  
                 ).toFixed(2)}
               </strong>
 
@@ -225,7 +207,7 @@ export default function ProductDetails() {
           <button
             className="btn btn-primary btn-lg w-100"
             disabled={product.stock <= 0}
-            onClick={addToCart}
+            onClick={()=>handleAddToCart(product)}
           >
             {product.stock > 0
               ? "Add To Cart"
